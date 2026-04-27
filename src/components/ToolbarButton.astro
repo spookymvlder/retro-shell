@@ -1,0 +1,55 @@
+---
+import ToolbarIcon from "./ToolbarIcon.astro";
+
+type IconSize = "small" | "medium" | "large";
+
+interface Props {
+    href: string;
+    label: string;
+    icon: string;
+    iconSize?: IconSize;
+    external?: boolean;
+}
+
+const {
+    href,
+    label,
+    icon,
+    iconSize = "medium",
+    external = false,
+} = Astro.props as Props;
+---
+
+<a
+        href={href}
+        class="toolbar-button"
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+>
+    <ToolbarIcon name={icon} size={iconSize} alt="" />
+    <span>{label}</span>
+</a>
+
+<style>
+    .toolbar-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 32px;
+        padding: 2px 4px;
+        color: #111;
+        text-decoration: none;
+        font-size: 19px;
+        white-space: nowrap;
+    }
+
+    .toolbar-button:hover {
+        background: #ffffcc;
+        outline: 1px dotted #111;
+    }
+
+    .toolbar-button:active {
+        background: #d4d0c8;
+        border: 1px inset #d4d0c8;
+    }
+</style>

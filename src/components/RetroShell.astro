@@ -1,0 +1,516 @@
+---
+import ToolbarButton from "./ToolbarButton.astro";
+import ToolbarIcon from "./ToolbarIcon.astro";
+
+const { title = "Home" } = Astro.props;
+const path = Astro.url.pathname;
+---
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>{title} | carlcarlcarl.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body>
+<main class="desktop">
+    <section id="browser" class="browser-window">
+        <div class="title-bar">
+            <span>carlcarlcarl.com - {title}</span>
+            <button id="close-browser" class="window-close" aria-label="Close browser">X</button>
+        </div>
+
+        <div class="nav-row">
+            <button id="back-button" class="nav-button" aria-label="Back">←</button>
+            <button id="forward-button" class="nav-button" aria-label="Forward">→</button>
+            <a class="nav-button home-button" href="/" aria-label="Home">⌂</a>
+
+            <form id="url-form" class="address-form">
+                <label for="path-input">Address</label>
+                <div class="address-box">
+                    <span>carlcarlcarl.com/</span>
+                    <input
+                            id="path-input"
+                            value={path === "/" ? "" : path.replace(/^\//, "")}
+                            aria-label="Site path"
+                            spellcheck="false"
+                    />
+                </div>
+                <button class="go-button" type="submit">➜ Go</button>
+            </form>
+        </div>
+
+        <div class="toolbar-clutter">
+            <div class="toolbar-row">
+                <ToolbarButton href="/projects" label="Projects" icon="folder" iconSize="large" />
+                <ToolbarButton href="https://github.com/YOUR_USERNAME" label="GitHub" icon="github" external />
+                <ToolbarButton href="https://www.linkedin.com/in/YOUR_USERNAME" label="LinkedIn" icon="linkedin" external />
+                <ToolbarButton href="/contact" label="Contact" icon="mail" />
+                <span class="weather">
+                  <span class="weather-icon sun"></span>
+                  <span id="weather-temp">--° F</span>
+                </span>
+
+                <form id="site-search-form" class="search-form">
+                    <ToolbarIcon name="search" size="large" />
+                    <input id="site-search-input" />
+                    <button type="submit">FindIt!</button>
+
+                </form>
+            </div>
+
+            <div class="toolbar-row">
+                <ToolbarButton href="/apollo-interface" label="Apollo Interface" icon="apollo" iconSize="large" />
+                <ToolbarButton href="/guestbook" label="Guestbook" icon="guestbook" />
+                <ToolbarButton href="/about" label="About" icon="info" />
+                <ToolbarButton href="/template" label="Get the template!" icon="template" />
+            </div>
+        </div>
+
+        <div class="content-shell">
+            <article class="content">
+                <slot />
+            </article>
+
+            <div class="fake-scrollbar" aria-hidden="true">
+                <button>▲</button>
+                <div></div>
+                <button>▼</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="closed-message" class="closed-message hidden">
+        Browser closed. Click Start to reopen.
+    </section>
+
+    <footer class="taskbar">
+        <button id="start-button">Start</button>
+    </footer>
+</main>
+
+<script>
+    const browser = document.querySelector<HTMLElement>("#browser");
+    const closedMessage = document.querySelector<HTMLElement>("#closed-message");
+    const closeButton = document.querySelector<HTMLButtonElement>("#close-browser");
+    const startButton = document.querySelector<HTMLButtonElement>("#start-button");
+
+    const backButton = document.querySelector<HTMLButtonElement>("#back-button");
+    const forwardButton = document.querySelector<HTMLButtonElement>("#forward-button");
+
+    const urlForm = document.querySelector<HTMLFormElement>("#url-form");
+    const pathInput = document.querySelector<HTMLInputElement>("#path-input");
+
+    const searchForm = document.querySelector<HTMLFormElement>("#site-search-form");
+    const searchInput = document.querySelector<HTMLInputElement>("#site-search-input");
+
+    const content = document.querySelector(".content");
+
+    const weatherTemp = document.querySelector<HTMLElement>("#weather-temp");
+    const weatherIcon = document.querySelector(".weather-icon");
+
+    fetch("/api/weather")
+        .then(res => res.json())
+        .then(data => {
+            if (!weatherIcon) return;
+
+            const forecast = data.shortForecast.toLowerCase();
+
+            let type = "sun";
+
+            if (forecast.includes("cloud")) type = "cloud";
+            if (forecast.includes("rain")) type = "rain";
+
+            weatherIcon.className = `weather-icon ${type}`;
+        });
+
+    fetch("/api/weather")
+        .then((res) => res.json())
+        .then((data) => {
+            if (!weatherTemp) return;
+            weatherTemp.textContent = `${data.temperature}°${data.unit}`;
+        })
+        .catch(() => {
+            if (weatherTemp) weatherTemp.textContent = "??°";
+        });
+
+    document.querySelectorAll(".fake-scrollbar button")[0]?.addEventListener("click", () => {
+        content?.scrollBy({ top: -100, behavior: "smooth" });
+    });
+
+    document.querySelectorAll(".fake-scrollbar button")[1]?.addEventListener("click", () => {
+        content?.scrollBy({ top: 100, behavior: "smooth" });
+    });
+
+    closeButton?.addEventListener("click", () => {
+        browser?.classList.add("hidden");
+        closedMessage?.classList.remove("hidden");
+    });
+
+    startButton?.addEventListener("click", () => {
+        browser?.classList.remove("hidden");
+        closedMessage?.classList.add("hidden");
+    });
+
+    backButton?.addEventListener("click", () => history.back());
+    forwardButton?.addEventListener("click", () => history.forward());
+
+    urlForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!pathInput) return;
+
+        let path = pathInput.value.trim();
+
+        path = path.replace(/^https?:\/\//, "");
+        path = path.replace(/^carlcarlcarl\.com\/?/, "");
+
+        if (path === "") {
+            window.location.href = "/";
+            return;
+        }
+
+        if (!path.startsWith("/")) {
+            path = "/" + path;
+        }
+
+        window.location.href = path;
+    });
+
+    searchForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!searchInput) return;
+
+        const query = searchInput.value.trim();
+
+        if (!query) return;
+
+        window.location.href = `/search?q=${encodeURIComponent(query)}`;
+    });
+</script>
+</body>
+</html>
+
+<style>
+    :global(*) {
+        box-sizing: border-box;
+    }
+
+    :global(body) {
+        margin: 0;
+        font-family: Tahoma, Verdana, sans-serif;
+        background: #0b7180;
+        color: #111;
+    }
+
+    .desktop {
+        min-height: 100vh;
+        padding: 28px 28px 62px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .browser-window {
+        width: min(calc(100vw - 48px), 1400px);
+        min-height: min(820px, calc(100vh - 110px));
+        background: #ece9d8;
+        border: 2px solid #ffffff;
+        border-right-color: #404040;
+        border-bottom-color: #404040;
+        box-shadow:
+                1px 1px 0 #000,
+                8px 8px 20px rgb(0 0 0 / 0.35);
+    }
+
+    .title-bar {
+        height: 31px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 5px 3px 8px;
+        color: white;
+        font-weight: bold;
+        background: linear-gradient(90deg, #000080, #0a65c0);
+        border-bottom: 1px solid #404040;
+    }
+
+    .window-close {
+        width: 27px;
+        height: 24px;
+        font: bold 18px Arial, sans-serif;
+        line-height: 18px;
+        background: #d4d0c8;
+        border: 2px solid #fff;
+        border-right-color: #404040;
+        border-bottom-color: #404040;
+        cursor: pointer;
+    }
+
+    .nav-row {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px;
+        background: #ece9d8;
+        border-bottom: 1px solid #9a9a9a;
+    }
+
+    .nav-button {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font: bold 28px Arial, sans-serif;
+        color: #000;
+        text-decoration: none;
+        background: #d4d0c8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+
+    .home-button {
+        font-size: 30px;
+    }
+
+    .address-form {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 22px;
+    }
+
+    .address-form label {
+        font-size: 18px;
+    }
+
+    .address-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 36px;
+        padding: 0 9px;
+        background: white;
+        border: 2px inset #d4d0c8;
+        font-size: 18px;
+    }
+
+    .address-box span {
+        color: #9a9a9a;
+        white-space: nowrap;
+    }
+
+    .address-box input {
+        flex: 1;
+        min-width: 80px;
+        border: 0;
+        outline: 0;
+        font: inherit;
+        background: transparent;
+    }
+
+    .go-button,
+    .search-form button {
+        height: 34px;
+        padding: 0 12px;
+        font: 18px Tahoma, sans-serif;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+
+    .toolbar-clutter {
+        background: #ece9d8;
+        border-bottom: 1px solid #888;
+    }
+
+    .toolbar-row {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        padding: 5px 8px;
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #b5b5b5;
+    }
+
+    .weather {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 18px;
+        white-space: nowrap;
+    }
+
+    .weather-icon {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        border: 1px solid #000;
+        position: relative;
+    }
+
+    .weather-icon.cloud {
+        background: #ccc;
+        border-radius: 12px;
+    }
+
+    .weather-icon.sun {
+        background: #ffd21a;
+        border-radius: 50%;
+    }
+
+    .weather-icon.rain {
+        background: #4a90e2;
+        border-radius: 4px;
+    }
+
+    .search-form input {
+        height: 24px;
+        border: 2px inset #d4d0c8;
+        font: 14px Tahoma, sans-serif;
+    }
+
+
+    .search-form input {
+        width: 150px;
+        height: 31px;
+        border: 2px inset #d4d0c8;
+        font: 16px Tahoma, sans-serif;
+    }
+
+    .content-shell {
+        display: flex;
+        min-height: 520px;
+        background: white;
+        overflow: hidden;
+    }
+
+    .content {
+        flex: 1;
+        padding: 34px 64px;
+        font-size: 20px;
+        line-height: 1.45;
+        overflow-y: auto;
+    }
+
+    .content :global(h1) {
+        display: inline-block;
+        margin: 0 0 24px;
+        padding: 6px 38px;
+        font-size: 42px;
+        font-weight: normal;
+        border: 1px solid #222;
+        background: #f8f8f8;
+    }
+
+    .fake-scrollbar {
+        width: 31px;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid #111;
+        background: #ece9d8;
+    }
+
+    .fake-scrollbar button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        font-size: 18px;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #333;
+        border-bottom-color: #333;
+    }
+
+    .fake-scrollbar div {
+        flex: 1;
+        border-top: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+    }
+
+    .taskbar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        background: #d4d0c8;
+        border-top: 2px solid #fff;
+        box-shadow: inset 0 1px #fff;
+    }
+
+    #start-button {
+        min-width: 126px;
+        height: 36px;
+        font: 20px Tahoma, sans-serif;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #111;
+        border-bottom-color: #111;
+        cursor: pointer;
+    }
+
+    .closed-message {
+        color: white;
+        font-size: 1.5rem;
+        text-shadow: 2px 2px #000;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    @media (max-width: 760px) {
+        .desktop {
+            padding: 8px 8px 52px;
+            align-items: flex-start;
+        }
+
+        .browser-window {
+            width: 100%;
+            min-height: calc(100vh - 64px);
+        }
+
+        .nav-row {
+            height: auto;
+            flex-wrap: wrap;
+        }
+
+        .address-form {
+            flex-basis: 100%;
+            margin-left: 0;
+            flex-wrap: wrap;
+        }
+
+        .address-box {
+            flex-basis: 100%;
+        }
+
+        .search-form {
+            margin-left: 0;
+            flex-wrap: wrap;
+        }
+
+        .content {
+            padding: 24px;
+            font-size: 18px;
+        }
+
+        .content :global(h1) {
+            font-size: 32px;
+            padding: 6px 18px;
+        }
+    }
+</style>

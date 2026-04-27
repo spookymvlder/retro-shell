@@ -1,0 +1,17 @@
+---
+import RetroShell from "../components/RetroShell.astro";
+
+const query = Astro.url.searchParams.get("q") ?? "";
+---
+
+<RetroShell title="Search">
+    <h1>FindIt! Search</h1>
+
+    {query ? (
+            <p>Search results for: <strong>{query}</strong></p>
+    ) : (
+            <p>No search term entered.</p>
+    )}
+
+    <p>Search logic can be wired up later.</p>
+</RetroShell>

@@ -1,0 +1,54 @@
+---
+type IconSize = "small" | "medium" | "large";
+
+interface Props {
+    name: string;
+    size?: IconSize;
+    alt?: string;
+}
+
+const {
+    name,
+    size = "medium",
+    alt = "",
+} = Astro.props as Props;
+
+const sizes: Record<IconSize, string> = {
+    small: "toolbar-icon--small",
+    medium: "toolbar-icon--medium",
+    large: "toolbar-icon--large",
+};
+
+const sizeClass = sizes[size];
+---
+
+<img
+        class={`toolbar-icon ${sizeClass}`}
+        src={`/icons/${name}.png`}
+        alt={alt}
+        loading="lazy"
+/>
+
+<style>
+    .toolbar-icon {
+        image-rendering: pixelated;
+        vertical-align: middle;
+        object-fit: contain;
+        flex: 0 0 auto;
+    }
+
+    .toolbar-icon--small {
+        width: 16px;
+        height: 16px;
+    }
+
+    .toolbar-icon--medium {
+        width: 20px;
+        height: 20px;
+    }
+
+    .toolbar-icon--large {
+        width: 24px;
+        height: 24px;
+    }
+</style>
