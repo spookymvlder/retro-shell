@@ -132,12 +132,20 @@ const { title = "Home" } = Astro.props as Props;
     }
 
     /* flex: 1 so the white content area fills the rest of the window —
-       prevents the beige browser-window background from peeking through below. */
+       prevents the beige browser-window background from peeking through below.
+       Margin gives a Win98-style beige frame around the content; the sunken
+       border completes the recessed-pane look. */
     .content-shell {
         flex: 1;
         display: flex;
         min-height: 520px;
+        margin: 0 3px 3px;
         background: white;
+        border: 2px solid;
+        border-top-color: #808080;
+        border-left-color: #808080;
+        border-right-color: #ffffff;
+        border-bottom-color: #ffffff;
         overflow: hidden;
     }
 
