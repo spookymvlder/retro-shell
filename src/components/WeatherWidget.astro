@@ -10,6 +10,16 @@
     const weatherTemp = document.querySelector<HTMLElement>("#weather-temp");
     const weatherIcon = document.querySelector(".weather-icon");
 
+    function pickIcon(forecast: string, isDaytime: boolean): string {
+        const f = forecast.toLowerCase();
+        if (f.includes("thunder") || f.includes("storm")) return "thunder";
+        if (f.includes("snow") || f.includes("flurr") || f.includes("sleet")) return "snow";
+        if (f.includes("rain") || f.includes("shower") || f.includes("drizzle")) return "rain";
+        if (f.includes("fog") || f.includes("mist") || f.includes("haze") || f.includes("smoke")) return "fog";
+        if (f.includes("cloud") || f.includes("overcast")) return "cloud";
+        return isDaytime ? "sun" : "moon";
+    }
+
     fetch("/api/weather")
         .then((res) => res.json())
         .then((data) => {
@@ -17,10 +27,7 @@
                 weatherTemp.textContent = `${data.temperature}°${data.unit}`;
             }
             if (weatherIcon) {
-                const forecast = (data.shortForecast ?? "").toLowerCase();
-                let type = "sun";
-                if (forecast.includes("cloud")) type = "cloud";
-                if (forecast.includes("rain")) type = "rain";
+                const type = pickIcon(data.shortForecast ?? "", data.isDaytime ?? true);
                 weatherIcon.className = `weather-icon ${type}`;
             }
         })
@@ -42,13 +49,9 @@
         width: 24px;
         height: 24px;
         display: inline-block;
-        border: 1px solid #000;
         position: relative;
-    }
-
-    .weather-icon.cloud {
-        background: #ccc;
-        border-radius: 12px;
+        border: 1px solid #000;
+        flex: 0 0 24px;
     }
 
     .weather-icon.sun {
@@ -56,8 +59,67 @@
         border-radius: 50%;
     }
 
+    /* Crescent moon: yellow disc with a toolbar-bg disc overlapping to carve out the crescent. */
+    .weather-icon.moon {
+        background: #f0e0a0;
+        border-radius: 50%;
+    }
+    .weather-icon.moon::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 6px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ece9d8;
+    }
+
+    .weather-icon.cloud {
+        background: #ccc;
+        border-radius: 12px;
+    }
+
+    /* Rain: blue base with diagonal streaks for a hatched-rain look. */
     .weather-icon.rain {
-        background: #4a90e2;
+        background:
+            repeating-linear-gradient(70deg, #1a4a8a 0 1px, transparent 1px 5px),
+            #4a90e2;
         border-radius: 4px;
+    }
+
+    /* Snow: pale base with three dots arranged as snowflakes. */
+    .weather-icon.snow {
+        background:
+            radial-gradient(circle at 30% 30%, white 2px, transparent 2.5px),
+            radial-gradient(circle at 70% 50%, white 2px, transparent 2.5px),
+            radial-gradient(circle at 40% 75%, white 2px, transparent 2.5px),
+            #b0b8d0;
+        border-radius: 4px;
+    }
+
+    /* Fog: alternating horizontal bands. */
+    .weather-icon.fog {
+        background: repeating-linear-gradient(
+            to bottom,
+            #ddd 0 3px,
+            #888 3px 5px,
+            #ddd 5px 8px,
+            #aaa 8px 10px
+        );
+        border-radius: 4px;
+    }
+
+    /* Thunder: yellow background with a lightning bolt cut out via clip-path on ::before. */
+    .weather-icon.thunder {
+        background: #4a4a6a;
+        border-radius: 4px;
+    }
+    .weather-icon.thunder::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #ffd21a;
+        clip-path: polygon(55% 0, 25% 55%, 45% 55%, 30% 100%, 75% 40%, 55% 40%, 70% 0);
     }
 </style>

@@ -20,5 +20,6 @@ export async function GET() {
         temperature: current.temperature,
         unit: current.temperatureUnit,
         shortForecast: current.shortForecast,
+        isDaytime: current.isDaytime,
     });
 }
