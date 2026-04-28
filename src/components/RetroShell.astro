@@ -370,14 +370,28 @@ urlForm?.addEventListener("submit", (event) => {
 
     /* === System variant ===
        Used by pages that should read as Win98 control-panel applets rather
-       than personal-site content. Flat beige background, plain Tahoma type,
-       no theme accents. Keep the chrome chrome, keep settings settings. */
+       than personal-site content. Plain page bg, no graph paper, plain Tahoma
+       type. Wrap form/applet content in <div class="system-pane"> for the
+       bounded gray Win98 box. */
     .content--system {
-        background-color: #c0c0c0;
+        background-color: var(--page-bg);
         background-image: none;
         font-family: Tahoma, Verdana, sans-serif;
         font-size: 16px;
         color: #111;
+    }
+
+    /* Bounded applet pane — sits on top of the page background like a control
+       panel window. Use class="system-pane" on a wrapper div. */
+    .content :global(.system-pane) {
+        max-width: 640px;
+        margin: 16px 0 24px;
+        padding: 20px 24px;
+        background: #c0c0c0;
+        border: 2px solid #ffffff;
+        border-right-color: #404040;
+        border-bottom-color: #404040;
+        box-shadow: inset 1px 1px 0 #ffffff, 1px 1px 0 #000;
     }
 
     .content.content--system :global(h1) {
