@@ -7,16 +7,26 @@ import Taskbar from "./Taskbar.astro";
 
 interface Props {
     title?: string;
+    /** Per-page description override for <meta> + Open Graph. Defaults to site.description. */
+    description?: string;
+    /** Per-page Open Graph image override (path under /public). Defaults to site.ogImage. */
+    ogImage?: string;
     /** Extra keywords for site search to find this page (off-screen). */
     searchKeywords?: string;
     /** "page" gets the personal-site theme; "system" gets a flat Win98 control-panel look. */
     variant?: "page" | "system";
 }
 
-const { title = "Home", searchKeywords, variant = "page" } = Astro.props as Props;
+const {
+    title = "Home",
+    description,
+    ogImage,
+    searchKeywords,
+    variant = "page",
+} = Astro.props as Props;
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description} ogImage={ogImage}>
     <main class="desktop">
         <section id="browser" class="browser-window">
             <TitleBar title={title} />

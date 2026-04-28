@@ -3,24 +3,58 @@ import { site } from "../site.config";
 
 interface Props {
     title?: string;
+    /** Per-page description override; falls back to site.description. */
+    description?: string;
+    /** Per-page OG image override; falls back to site.ogImage. */
+    ogImage?: string;
 }
 
-const { title = "Home" } = Astro.props as Props;
+const {
+    title = "Home",
+    description = site.description,
+    ogImage = site.ogImage,
+} = Astro.props as Props;
+
+const fullTitle = `${title} | ${site.titleSuffix}`;
+// Astro.site is set in astro.config.mjs and used to build absolute URLs for OG.
+// In dev or when site is unset, fall back to relative paths.
+const canonicalUrl = Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).toString()
+    : Astro.url.pathname;
+const absoluteOgImage = Astro.site
+    ? new URL(ogImage, Astro.site).toString()
+    : ogImage;
 ---
 
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{title} | {site.titleSuffix}</title>
-</head>
-<body>
-<slot />
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{fullTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalUrl} />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={absoluteOgImage} />
+        <meta property="og:site_name" content={site.siteName} />
+
+        <!-- Twitter / X card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={fullTitle} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={absoluteOgImage} />
+    </head>
+    <body>
+        <slot />
+    </body>
 </html>
 
 <style is:global>

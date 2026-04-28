@@ -1,0 +1,71 @@
+---
+import RetroShell from "../components/RetroShell.astro";
+
+export const prerender = true;
+---
+
+<RetroShell
+    title="Page Not Found"
+    variant="system"
+    description="The requested page could not be found."
+>
+    <h1>404 — File Not Found</h1>
+
+    <div class="error-box">
+        <span class="error-icon" aria-hidden="true">!</span>
+        <div>
+            <p>
+                The page you requested could not be found on this server.
+            </p>
+            <p>
+                Possible reasons:
+            </p>
+            <ul>
+                <li>The address was mistyped.</li>
+                <li>The page has moved or been removed.</li>
+                <li>You followed a broken link from another site.</li>
+            </ul>
+        </div>
+    </div>
+
+    <p>
+        <a href="/">← Return to the home page</a>
+    </p>
+</RetroShell>
+
+<style>
+    .error-box {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        margin: 16px 0 24px;
+        padding: 16px 18px;
+        background: #d8d8d8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+    }
+
+    .error-icon {
+        flex: 0 0 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font: bold 32px Tahoma, sans-serif;
+        color: white;
+        background: #c43e3e;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: inset -1px -1px 0 #555, 1px 1px 0 #555;
+    }
+
+    .error-box p {
+        margin: 0 0 8px;
+    }
+
+    .error-box ul {
+        margin: 4px 0 0;
+        padding-left: 20px;
+    }
+</style>
