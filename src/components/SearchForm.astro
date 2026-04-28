@@ -1,0 +1,36 @@
+---
+import ToolbarIcon from "./ToolbarIcon.astro";
+import { site } from "../site.config";
+---
+
+<form id="site-search-form" class="search-form" data-search-path={site.search.path}>
+    <ToolbarIcon name="search" size="large" />
+    <input id="site-search-input" aria-label="Search this site" />
+    <button type="submit">FindIt!</button>
+</form>
+
+<style>
+    .search-form {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .search-form input {
+        width: 150px;
+        height: 31px;
+        border: 2px inset #d4d0c8;
+        font: 16px Tahoma, sans-serif;
+    }
+
+    .search-form button {
+        height: 34px;
+        padding: 0 12px;
+        font: 18px Tahoma, sans-serif;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+</style>

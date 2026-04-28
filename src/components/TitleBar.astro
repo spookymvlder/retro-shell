@@ -1,0 +1,40 @@
+---
+import { site } from "../site.config";
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props as Props;
+---
+
+<div class="title-bar">
+    <span>{site.siteName} - {title}</span>
+    <button id="close-browser" class="window-close" aria-label="Close browser">X</button>
+</div>
+
+<style>
+    .title-bar {
+        height: 31px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 5px 3px 8px;
+        color: white;
+        font-weight: bold;
+        background: linear-gradient(90deg, #000080, #0a65c0);
+        border-bottom: 1px solid #404040;
+    }
+
+    .window-close {
+        width: 27px;
+        height: 24px;
+        font: bold 18px Arial, sans-serif;
+        line-height: 18px;
+        background: #d4d0c8;
+        border: 2px solid #fff;
+        border-right-color: #404040;
+        border-bottom-color: #404040;
+        cursor: pointer;
+    }
+</style>

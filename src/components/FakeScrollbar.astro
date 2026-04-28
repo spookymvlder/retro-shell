@@ -1,0 +1,35 @@
+---
+---
+
+<div class="fake-scrollbar" aria-hidden="true">
+    <button data-scroll="up">▲</button>
+    <div></div>
+    <button data-scroll="down">▼</button>
+</div>
+
+<style>
+    .fake-scrollbar {
+        width: 31px;
+        display: flex;
+        flex-direction: column;
+        border-left: 1px solid #111;
+        background: #ece9d8;
+    }
+
+    .fake-scrollbar button {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        font-size: 18px;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #333;
+        border-bottom-color: #333;
+    }
+
+    .fake-scrollbar div {
+        flex: 1;
+        border-top: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+    }
+</style>

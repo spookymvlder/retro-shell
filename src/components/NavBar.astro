@@ -1,0 +1,106 @@
+---
+import { site } from "../site.config";
+
+const path = Astro.url.pathname;
+const initialPath = path === "/" ? "" : path.replace(/^\//, "");
+---
+
+<div class="nav-row">
+    <button id="back-button" class="nav-button" aria-label="Back">←</button>
+    <button id="forward-button" class="nav-button" aria-label="Forward">→</button>
+    <a class="nav-button home-button" href="/" aria-label="Home">⌂</a>
+
+    <form id="url-form" class="address-form" data-site-name={site.siteName}>
+        <label for="path-input">Address</label>
+        <div class="address-box">
+            <span>{site.siteName}/</span>
+            <input
+                id="path-input"
+                value={initialPath}
+                aria-label="Site path"
+                spellcheck="false"
+            />
+        </div>
+        <button class="go-button" type="submit">➜ Go</button>
+    </form>
+</div>
+
+<style>
+    .nav-row {
+        height: 70px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px;
+        background: #ece9d8;
+        border-bottom: 1px solid #9a9a9a;
+    }
+
+    .nav-button {
+        width: 38px;
+        height: 38px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font: bold 28px Arial, sans-serif;
+        color: #000;
+        text-decoration: none;
+        background: #d4d0c8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+
+    .home-button {
+        font-size: 30px;
+    }
+
+    .address-form {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 22px;
+    }
+
+    .address-form label {
+        font-size: 18px;
+    }
+
+    .address-box {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: 36px;
+        padding: 0 9px;
+        background: white;
+        border: 2px inset #d4d0c8;
+        font-size: 18px;
+    }
+
+    .address-box span {
+        color: #9a9a9a;
+        white-space: nowrap;
+    }
+
+    .address-box input {
+        flex: 1;
+        min-width: 80px;
+        border: 0;
+        outline: 0;
+        font: inherit;
+        background: transparent;
+    }
+
+    .go-button {
+        height: 34px;
+        padding: 0 12px;
+        font: 18px Tahoma, sans-serif;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+</style>

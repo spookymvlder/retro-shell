@@ -1,0 +1,63 @@
+---
+---
+
+<span class="weather">
+    <span class="weather-icon sun"></span>
+    <span id="weather-temp">--° F</span>
+</span>
+
+<script>
+    const weatherTemp = document.querySelector<HTMLElement>("#weather-temp");
+    const weatherIcon = document.querySelector(".weather-icon");
+
+    fetch("/api/weather")
+        .then((res) => res.json())
+        .then((data) => {
+            if (weatherTemp) {
+                weatherTemp.textContent = `${data.temperature}°${data.unit}`;
+            }
+            if (weatherIcon) {
+                const forecast = (data.shortForecast ?? "").toLowerCase();
+                let type = "sun";
+                if (forecast.includes("cloud")) type = "cloud";
+                if (forecast.includes("rain")) type = "rain";
+                weatherIcon.className = `weather-icon ${type}`;
+            }
+        })
+        .catch(() => {
+            if (weatherTemp) weatherTemp.textContent = "??°";
+        });
+</script>
+
+<style>
+    .weather {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 18px;
+        white-space: nowrap;
+    }
+
+    .weather-icon {
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        border: 1px solid #000;
+        position: relative;
+    }
+
+    .weather-icon.cloud {
+        background: #ccc;
+        border-radius: 12px;
+    }
+
+    .weather-icon.sun {
+        background: #ffd21a;
+        border-radius: 50%;
+    }
+
+    .weather-icon.rain {
+        background: #4a90e2;
+        border-radius: 4px;
+    }
+</style>

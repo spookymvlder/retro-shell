@@ -1,0 +1,44 @@
+---
+import ToolbarButton from "./ToolbarButton.astro";
+import WeatherWidget from "./WeatherWidget.astro";
+import SearchForm from "./SearchForm.astro";
+import { site } from "../site.config";
+
+// Weather + search live on the first row, after the configured buttons.
+---
+
+<div class="toolbar-clutter">
+    {site.toolbarRows.map((row, rowIndex) => (
+        <div class="toolbar-row">
+            {row.map((link) => (
+                <ToolbarButton
+                    href={link.href}
+                    label={link.label}
+                    icon={link.icon}
+                    iconSize={link.iconSize}
+                    external={link.external}
+                />
+            ))}
+            {rowIndex === 0 && site.weather.enabled && <WeatherWidget />}
+            {rowIndex === 0 && site.search.enabled && <SearchForm />}
+        </div>
+    ))}
+</div>
+
+<style>
+    .toolbar-clutter {
+        background: #ece9d8;
+        border-bottom: 1px solid #888;
+    }
+
+    .toolbar-row {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        padding: 5px 8px;
+        border-top: 1px solid #fff;
+        border-bottom: 1px solid #b5b5b5;
+    }
+</style>
