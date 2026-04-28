@@ -31,6 +31,32 @@ const absoluteOgImage = Astro.site
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- Apply saved theme before paint to prevent a light → dark flash.
+             Reads localStorage, falls back to site default (with optional
+             system-pref detection). is:inline keeps it from being bundled. -->
+        <script is:inline define:vars={{ defaultTheme: site.darkMode.default, enabled: site.darkMode.enabled }}>
+            (function () {
+                if (!enabled) return;
+                try {
+                    let theme;
+                    const raw = localStorage.getItem("retro-shell:settings");
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed && parsed.theme) theme = parsed.theme;
+                    }
+                    if (!theme) {
+                        theme = defaultTheme === "auto"
+                            ? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+                            : defaultTheme;
+                    }
+                    if (theme === "dark") {
+                        document.documentElement.setAttribute("data-theme", "dark");
+                    }
+                } catch (e) {
+                    /* localStorage may be unavailable; default to light. */
+                }
+            })();
+        </script>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="generator" content={Astro.generator} />
@@ -72,6 +98,7 @@ const absoluteOgImage = Astro.site
        the browser is where personal-site personality lives. */
     :root {
         --page-bg: #fff5e8;
+        --page-grid-color: rgba(0, 0, 0, 0.05);
         --page-text: #2a1a0a;
         --page-muted: #6a4a2a;
         --page-accent: #c43e7a;
@@ -81,6 +108,20 @@ const absoluteOgImage = Astro.site
         --page-link-visited: #6a26a4;
         --page-heading-font: Georgia, "Times New Roman", serif;
         --page-body-font: Verdana, Tahoma, sans-serif;
+        /* Used on yellow highlight backgrounds (h1, sticker hover) — stays
+           dark in both themes for contrast against --page-highlight. */
+        --page-text-on-highlight: #2a1a0a;
+    }
+
+    [data-theme="dark"] {
+        --page-bg: #1a1525;
+        --page-grid-color: rgba(255, 255, 255, 0.06);
+        --page-text: #f5e8d8;
+        --page-muted: #a89880;
+        --page-accent: #e95494;
+        --page-accent-soft: #3d1828;
+        --page-link: #7fb3ff;
+        --page-link-visited: #c49bdc;
     }
 
     body {

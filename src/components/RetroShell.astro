@@ -172,8 +172,8 @@ urlForm?.addEventListener("submit", (event) => {
            via --page-bg if you want a more personal background. */
         background-color: var(--page-bg);
         background-image:
-            repeating-linear-gradient(0deg, transparent 0 19px, rgba(0, 0, 0, 0.05) 19px 20px),
-            repeating-linear-gradient(90deg, transparent 0 19px, rgba(0, 0, 0, 0.05) 19px 20px);
+            repeating-linear-gradient(0deg, transparent 0 19px, var(--page-grid-color) 19px 20px),
+            repeating-linear-gradient(90deg, transparent 0 19px, var(--page-grid-color) 19px 20px);
         overflow-y: auto;
         /* Firefox: thin retro-tinted scrollbar (no buttons available). */
         scrollbar-color: #d4d0c8 #ece9d8;
@@ -250,6 +250,7 @@ urlForm?.addEventListener("submit", (event) => {
     .content :global(.sticker:hover),
     .content :global(.sticker:focus-visible) {
         background: var(--page-highlight);
+        color: var(--page-text-on-highlight);
         transform: scale(1.02);
     }
 
@@ -448,20 +449,20 @@ urlForm?.addEventListener("submit", (event) => {
     }
 
     /* Big serif headline with a chunky accent underline + offset shadow.
-       Replaces the previous boxed-out look. */
+       Replaces the previous boxed-out look. Text stays dark in both themes
+       since the background is yellow. */
     .content :global(h1) {
         display: inline-block;
         margin: 0 0 28px;
-        padding: 6px 4px;
+        padding: 8px 20px;
         font-family: var(--page-heading-font);
         font-size: 44px;
         font-weight: normal;
         line-height: 1.1;
-        color: var(--page-text);
+        color: var(--page-text-on-highlight);
         background: var(--page-highlight);
         box-shadow: 5px 5px 0 var(--page-accent);
-        border: 2px solid var(--page-text);
-        padding: 8px 20px;
+        border: 2px solid var(--page-text-on-highlight);
     }
 
     .closed-message {
