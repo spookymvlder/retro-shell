@@ -3,7 +3,6 @@ import Layout from "../layouts/Layout.astro";
 import TitleBar from "./TitleBar.astro";
 import NavBar from "./NavBar.astro";
 import Toolbar from "./Toolbar.astro";
-import FakeScrollbar from "./FakeScrollbar.astro";
 import Taskbar from "./Taskbar.astro";
 
 interface Props {
@@ -29,7 +28,6 @@ const { title = "Home", searchKeywords } = Astro.props as Props;
                     )}
                     <slot />
                 </article>
-                <FakeScrollbar />
             </div>
         </section>
 
@@ -56,9 +54,7 @@ const { title = "Home", searchKeywords } = Astro.props as Props;
     const searchForm = document.querySelector<HTMLFormElement>("#site-search-form");
     const searchInput = document.querySelector<HTMLInputElement>("#site-search-input");
 
-    const content = document.querySelector<HTMLElement>(".content");
-
-    closeButton?.addEventListener("click", () => {
+closeButton?.addEventListener("click", () => {
         browser?.classList.add("hidden");
         closedMessage?.classList.remove("hidden");
     });
@@ -71,14 +67,7 @@ const { title = "Home", searchKeywords } = Astro.props as Props;
     backButton?.addEventListener("click", () => history.back());
     forwardButton?.addEventListener("click", () => history.forward());
 
-    document.querySelectorAll<HTMLButtonElement>(".fake-scrollbar button").forEach((btn) => {
-        btn.addEventListener("click", () => {
-            const dir = btn.dataset.scroll === "up" ? -100 : 100;
-            content?.scrollBy({ top: dir, behavior: "smooth" });
-        });
-    });
-
-    urlForm?.addEventListener("submit", (event) => {
+urlForm?.addEventListener("submit", (event) => {
         event.preventDefault();
         if (!pathInput) return;
 
@@ -166,6 +155,61 @@ const { title = "Home", searchKeywords } = Astro.props as Props;
         font-size: 20px;
         line-height: 1.45;
         overflow-y: auto;
+        /* Firefox: thin retro-tinted scrollbar (no buttons available). */
+        scrollbar-color: #d4d0c8 #ece9d8;
+    }
+
+    /* WebKit/Chromium: retro scrollbar with up/down buttons, hatched track,
+       and a raised thumb. Firefox ignores these and falls back to
+       scrollbar-color above. */
+    .content::-webkit-scrollbar {
+        width: 31px;
+    }
+
+    .content::-webkit-scrollbar-track {
+        background-color: #ece9d8;
+        background-image:
+            linear-gradient(45deg, #d4d0c8 25%, transparent 25%, transparent 75%, #d4d0c8 75%),
+            linear-gradient(45deg, #d4d0c8 25%, transparent 25%, transparent 75%, #d4d0c8 75%);
+        background-size: 4px 4px;
+        background-position: 0 0, 2px 2px;
+        border-left: 1px solid #111;
+    }
+
+    .content::-webkit-scrollbar-thumb {
+        background: #d4d0c8;
+        border: 2px solid;
+        border-top-color: #ffffff;
+        border-left-color: #ffffff;
+        border-right-color: #555555;
+        border-bottom-color: #555555;
+    }
+
+    .content::-webkit-scrollbar-button {
+        display: block;
+        height: 30px;
+        background: #ece9d8;
+        border: 2px solid;
+        border-top-color: #ffffff;
+        border-left-color: #ffffff;
+        border-right-color: #333333;
+        border-bottom-color: #333333;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .content::-webkit-scrollbar-button:vertical:decrement {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><polygon points='5,3 8,7 2,7' fill='black'/></svg>");
+    }
+
+    .content::-webkit-scrollbar-button:vertical:increment {
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><polygon points='2,3 8,3 5,7' fill='black'/></svg>");
+    }
+
+    /* Hide the secondary buttons WebKit adds at the opposite ends. */
+    .content::-webkit-scrollbar-button:vertical:start:increment,
+    .content::-webkit-scrollbar-button:vertical:end:decrement {
+        display: none;
     }
 
     .content :global(h1) {
