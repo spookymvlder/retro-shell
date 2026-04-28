@@ -7,103 +7,143 @@ interface DirectoryLink {
     href: string;
     label: string;
     icon: string;
-    description: string;
+    blurb: string;
 }
 
 const directory: DirectoryLink[] = [
-    { href: "/projects", label: "Projects", icon: "folder", description: "Things I've made." },
-    { href: "/guestbook", label: "Guestbook", icon: "guestbook", description: "Sign the book!" },
-    { href: "/about", label: "About", icon: "info", description: "Who runs this site." },
-    { href: "/contact", label: "Contact", icon: "mail", description: "Drop me a line." },
+    { href: "/projects", label: "Projects", icon: "folder", blurb: "Things I've made." },
+    { href: "/guestbook", label: "Guestbook", icon: "guestbook", blurb: "Sign the book!" },
+    { href: "/about", label: "About", icon: "info", blurb: "Who runs this place." },
+    { href: "/contact", label: "Contact", icon: "mail", blurb: "Drop me a line." },
+];
+
+interface NewsItem {
+    date: string;
+    text: string;
+}
+
+const news: NewsItem[] = [
+    { date: "Apr 2026", text: "Site launched. Welcome!" },
+    { date: "Apr 2026", text: "Guestbook is open — be the first to sign." },
+    { date: "Apr 2026", text: "Added a weather widget. Yes, it's pacific time." },
 ];
 ---
 
 <RetroShell
     title="Home"
-    searchKeywords="welcome home main directory weather clock guestbook projects contact about template"
+    searchKeywords="welcome home main directory weather clock guestbook projects contact about template news updates"
 >
-    <h1>Welcome to Retro Shell</h1>
+    <h1>Welcome!</h1>
 
-    <p>
-        This is a template for building a personal website wrapped in a fake
-        late-90s / early-2000s browser window. Replace this content with your own,
-        update <code>src/site.config.ts</code> with your links, and you're off.
+    <p class="lede">
+        Hi — this is a personal corner of the web, dressed up like it's 1999.
+        The browser around the page is fake. The content is real.
+        Poke around using the directory below or the toolbar above.
     </p>
 
-    <h2>Real Site Directory</h2>
+    <h2>Directory</h2>
 
     <ul class="directory">
         {directory.map((entry) => (
             <li>
-                <a class="directory-tile" href={entry.href}>
+                <a class="sticker" href={entry.href}>
                     <img
-                        class="directory-icon"
+                        class="sticker-icon"
                         src={`/icons/${entry.icon}.png`}
                         alt=""
                         loading="lazy"
                     />
-                    <span class="directory-label">{entry.label}</span>
-                    <span class="directory-description">{entry.description}</span>
+                    <span class="sticker-label">{entry.label}</span>
+                    <span class="sticker-blurb">{entry.blurb}</span>
                 </a>
             </li>
         ))}
     </ul>
 
+    <div class="news">
+        <span class="news-badge">NEW!</span>
+        <h2 class="news-heading">What's New</h2>
+        <ul class="news-list">
+            {news.map((item) => (
+                <li>
+                    <span class="news-date">{item.date}</span>
+                    <span class="news-text">{item.text}</span>
+                </li>
+            ))}
+        </ul>
+    </div>
+
     <h2>Make it your own</h2>
 
     <p>
-        Edit <code>src/site.config.ts</code> to change the site name, toolbar
-        buttons, default time zone, and weather location. Drop new pages into
-        <code>src/pages/</code> and wrap them in <code>&lt;RetroShell&gt;</code>.
-        See the <a href="https://github.com/spookymvlder/retro-shell">project README</a>
-        for the full setup walkthrough — including the optional Cloudflare D1
+        This is a template. Edit <code>src/site.config.ts</code> for the site
+        name, toolbar links, default time zone, and weather location. Drop new
+        pages into <code>src/pages/</code> and wrap them in
+        <code>&lt;RetroShell&gt;</code>. The <a href="https://github.com/spookymvlder/retro-shell">README</a>
+        has the full setup walkthrough including the optional Cloudflare D1
         guestbook and Turnstile spam protection.
     </p>
 
-    <p>
-        Don't like a piece of the chrome? Toolbar buttons, the weather widget,
-        the search box, the guestbook, and the taskbar clock can each be toggled
-        individually in the config.
+    <p class="footer-line">
+        ✦ Best viewed in Internet Explorer 5 ✦
+        Hand-coded with love ✦
+        Powered by <a href="https://github.com/spookymvlder/retro-shell">Retro Shell</a> ✦
     </p>
 </RetroShell>
 
 <style>
+    .lede {
+        font-size: 19px;
+        max-width: 60ch;
+    }
+
+    /* === Directory tiles styled as stickers ===
+       White cards with thick black borders and a hard offset shadow.
+       Alternating slight rotation so they feel hand-placed, not gridded. */
     .directory {
         list-style: none;
         padding: 0;
-        margin: 0 0 32px;
+        margin: 8px 0 36px;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
+        gap: 26px 22px;
         max-width: 720px;
     }
 
-    .directory-tile {
+    .directory li:nth-child(odd) .sticker {
+        transform: rotate(-1.2deg);
+    }
+    .directory li:nth-child(even) .sticker {
+        transform: rotate(1deg);
+    }
+
+    .sticker {
         display: grid;
-        grid-template-columns: 64px 1fr;
+        grid-template-columns: 56px 1fr;
         grid-template-rows: auto auto;
         column-gap: 14px;
         row-gap: 4px;
         align-items: center;
-        padding: 14px 16px;
-        color: #111;
+        padding: 14px 18px;
+        background: #ffffff;
+        color: var(--page-text);
         text-decoration: none;
-        background: #ece9d8;
-        border: 2px solid #fff;
-        border-right-color: #555;
-        border-bottom-color: #555;
+        border: 3px solid var(--page-text);
+        box-shadow: 5px 5px 0 var(--page-accent);
+        transition: transform 0.08s ease-out;
     }
 
-    .directory-tile:hover {
-        background: #fffff0;
-        outline: 1px dotted #111;
+    .sticker:hover {
+        background: var(--page-highlight);
+        transform: rotate(0) scale(1.02) !important;
     }
 
-    .directory-tile:active {
-        border: 2px inset #d4d0c8;
+    .sticker:active {
+        transform: rotate(0) translate(3px, 3px) !important;
+        box-shadow: 2px 2px 0 var(--page-accent);
     }
 
-    .directory-icon {
+    .sticker-icon {
         grid-row: 1 / span 2;
         width: 48px;
         height: 48px;
@@ -111,21 +151,76 @@ const directory: DirectoryLink[] = [
         object-fit: contain;
     }
 
-    .directory-label {
+    .sticker-label {
+        font-family: var(--page-heading-font);
         font-size: 22px;
         font-weight: bold;
     }
 
-    .directory-description {
-        font-size: 16px;
-        color: #444;
+    .sticker-blurb {
+        font-size: 15px;
+        color: var(--page-muted);
     }
 
-    code {
-        padding: 1px 5px;
-        background: #fffff0;
-        border: 1px solid #aaa;
-        font-family: "Courier New", Courier, monospace;
-        font-size: 0.95em;
+    /* === What's New panel ===
+       Soft-pink box with a "NEW!" sticker peeking off the corner. */
+    .news {
+        position: relative;
+        max-width: 540px;
+        margin: 36px 0;
+        padding: 18px 24px 14px;
+        background: var(--page-accent-soft);
+        border: 3px solid var(--page-text);
+        box-shadow: 5px 5px 0 var(--page-accent);
+    }
+
+    .news-badge {
+        position: absolute;
+        top: -18px;
+        left: -14px;
+        padding: 4px 10px;
+        font-family: var(--page-heading-font);
+        font-weight: bold;
+        font-size: 18px;
+        color: white;
+        background: var(--page-accent);
+        border: 2px solid var(--page-text);
+        transform: rotate(-8deg);
+        box-shadow: 2px 2px 0 var(--page-text);
+    }
+
+    .news-heading {
+        margin-top: 0 !important;
+    }
+
+    .news-list {
+        list-style: none;
+        padding: 0;
+        margin: 6px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .news-list li {
+        display: flex;
+        gap: 10px;
+        font-size: 16px;
+    }
+
+    .news-date {
+        flex: 0 0 80px;
+        font-weight: bold;
+        color: var(--page-accent);
+    }
+
+    /* === Cheeky footer ✦ === */
+    .footer-line {
+        margin-top: 48px;
+        padding-top: 16px;
+        border-top: 2px dashed var(--page-accent);
+        font-size: 14px;
+        color: var(--page-muted);
+        text-align: center;
     }
 </style>

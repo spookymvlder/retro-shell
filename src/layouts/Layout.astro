@@ -33,6 +33,22 @@ const { title = "Home" } = Astro.props as Props;
         margin: 0;
     }
 
+    /* Page-content theme tokens. The shell chrome (title bar, toolbar, taskbar)
+       intentionally ignores these and stays Win98-y; the page area inside
+       the browser is where personal-site personality lives. */
+    :root {
+        --page-bg: #fff5e8;
+        --page-text: #2a1a0a;
+        --page-muted: #6a4a2a;
+        --page-accent: #c43e7a;
+        --page-accent-soft: #ffe0ed;
+        --page-highlight: #ffd21a;
+        --page-link: #1a3aea;
+        --page-link-visited: #6a26a4;
+        --page-heading-font: Georgia, "Times New Roman", serif;
+        --page-body-font: Verdana, Tahoma, sans-serif;
+    }
+
     body {
         font-family: Tahoma, Verdana, sans-serif;
         background: #0b7180;
