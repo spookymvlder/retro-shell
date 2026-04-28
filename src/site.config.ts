@@ -27,6 +27,19 @@ export interface SiteConfig {
         lon: number;
         /** weather.gov requires a User-Agent identifying the caller */
         userAgent: string;
+        /** Country code for zippopotam.us zip-to-coords lookup ("us", "ca", "gb", ...) */
+        zipCountry: string;
+    };
+    clock: {
+        enabled: boolean;
+        /** IANA timezone used when the visitor hasn't picked one in Settings */
+        defaultTimezone: string;
+        defaultFormat: "12h" | "24h";
+        /** Options shown in the Settings page dropdown */
+        timezoneOptions: { value: string; label: string }[];
+    };
+    settings: {
+        enabled: boolean;
     };
     search: {
         enabled: boolean;
@@ -68,6 +81,7 @@ export const site: SiteConfig = {
             { href: "/apollo-interface", label: "Apollo Interface", icon: "apollo", iconSize: "large" },
             { href: "/guestbook", label: "Guestbook", icon: "guestbook" },
             { href: "/about", label: "About", icon: "info" },
+            { href: "/settings", label: "Settings", icon: "info" },
             { href: "https://github.com/spookymvlder/retro-shell", label: "Get Retro Shell!", icon: "template" },
         ],
     ],
@@ -77,6 +91,30 @@ export const site: SiteConfig = {
         lat: 47.205,
         lon: -122.540,
         userAgent: "carlcarlcarl.com weather widget",
+        zipCountry: "us",
+    },
+
+    clock: {
+        enabled: true,
+        defaultTimezone: "America/Los_Angeles",
+        defaultFormat: "12h",
+        timezoneOptions: [
+            { value: "America/Los_Angeles", label: "Pacific Time" },
+            { value: "America/Denver", label: "Mountain Time" },
+            { value: "America/Chicago", label: "Central Time" },
+            { value: "America/New_York", label: "Eastern Time" },
+            { value: "America/Anchorage", label: "Alaska Time" },
+            { value: "Pacific/Honolulu", label: "Hawaii Time" },
+            { value: "UTC", label: "UTC" },
+            { value: "Europe/London", label: "London" },
+            { value: "Europe/Paris", label: "Paris / Berlin" },
+            { value: "Asia/Tokyo", label: "Tokyo" },
+            { value: "Australia/Sydney", label: "Sydney" },
+        ],
+    },
+
+    settings: {
+        enabled: true,
     },
 
     search: {

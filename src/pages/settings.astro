@@ -1,0 +1,171 @@
+---
+import RetroShell from "../components/RetroShell.astro";
+import { site } from "../site.config";
+
+export const prerender = true;
+---
+
+<RetroShell title="Settings">
+    <h1>Settings</h1>
+    <p>These settings are stored in your browser only.</p>
+
+    <form id="settings-form" class="settings-form">
+        <fieldset>
+            <legend>Weather</legend>
+            <label>
+                <span>Zip code</span>
+                <input
+                    id="zip"
+                    name="zip"
+                    inputmode="numeric"
+                    pattern="[0-9]{5}"
+                    maxlength="5"
+                    placeholder="e.g. 98402"
+                />
+                <small>Leave blank to use the site default.</small>
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Clock</legend>
+            <label>
+                <span>Time zone</span>
+                <select id="timezone" name="timezone">
+                    <option value="">Site default ({site.clock.defaultTimezone})</option>
+                    {site.clock.timezoneOptions.map((opt) => (
+                        <option value={opt.value}>{opt.label}</option>
+                    ))}
+                </select>
+            </label>
+            <label>
+                <span>Format</span>
+                <select id="clock-format" name="clockFormat">
+                    <option value="">Site default ({site.clock.defaultFormat})</option>
+                    <option value="12h">12-hour (1:30 PM)</option>
+                    <option value="24h">24-hour (13:30)</option>
+                </select>
+            </label>
+        </fieldset>
+
+        <div class="actions">
+            <button type="submit">Save</button>
+            <button type="button" id="reset-button">Reset to defaults</button>
+        </div>
+        <p id="settings-status" class="status" aria-live="polite"></p>
+    </form>
+</RetroShell>
+
+<script>
+    import { loadSettings, saveSettings, clearSettings } from "../lib/userSettings";
+
+    const form = document.querySelector<HTMLFormElement>("#settings-form");
+    const zip = document.querySelector<HTMLInputElement>("#zip");
+    const tz = document.querySelector<HTMLSelectElement>("#timezone");
+    const fmt = document.querySelector<HTMLSelectElement>("#clock-format");
+    const status = document.querySelector<HTMLElement>("#settings-status");
+    const resetBtn = document.querySelector<HTMLButtonElement>("#reset-button");
+
+    function showStatus(message: string) {
+        if (status) {
+            status.textContent = message;
+            setTimeout(() => {
+                if (status.textContent === message) status.textContent = "";
+            }, 2500);
+        }
+    }
+
+    // Pre-fill from existing settings.
+    const current = loadSettings();
+    if (zip) zip.value = current.zip ?? "";
+    if (tz) tz.value = current.timezone ?? "";
+    if (fmt) fmt.value = current.clockFormat ?? "";
+
+    form?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const next = {
+            zip: zip?.value.trim() || undefined,
+            timezone: tz?.value || undefined,
+            clockFormat: (fmt?.value || undefined) as "12h" | "24h" | undefined,
+        };
+        saveSettings(next);
+        showStatus("Settings saved.");
+    });
+
+    resetBtn?.addEventListener("click", () => {
+        clearSettings();
+        if (zip) zip.value = "";
+        if (tz) tz.value = "";
+        if (fmt) fmt.value = "";
+        showStatus("Reset to site defaults.");
+    });
+</script>
+
+<style>
+    .settings-form {
+        max-width: 520px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    fieldset {
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        padding: 12px 16px;
+        background: #ece9d8;
+    }
+
+    legend {
+        padding: 0 6px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin: 8px 0;
+        font-size: 16px;
+    }
+
+    label span {
+        font-weight: bold;
+    }
+
+    input,
+    select {
+        padding: 4px 6px;
+        font: 16px Tahoma, sans-serif;
+        background: white;
+        border: 2px inset #d4d0c8;
+    }
+
+    small {
+        color: #555;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .actions button {
+        height: 34px;
+        padding: 0 16px;
+        font: 18px Tahoma, sans-serif;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+
+    .status {
+        min-height: 1.4em;
+        margin: 0;
+        font-size: 16px;
+        color: #006400;
+    }
+</style>
