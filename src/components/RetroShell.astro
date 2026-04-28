@@ -103,13 +103,13 @@ urlForm?.addEventListener("submit", (event) => {
 
     searchForm?.addEventListener("submit", (event) => {
         event.preventDefault();
-        if (!searchInput) return;
-
-        const query = searchInput.value.trim();
-        if (!query) return;
-
         const searchPath = searchForm.dataset.searchPath ?? "/search";
-        window.location.href = `${searchPath}?q=${encodeURIComponent(query)}`;
+        const query = searchInput?.value.trim() ?? "";
+        // Empty submit still navigates to the search page so visitors can use
+        // the larger form there.
+        window.location.href = query
+            ? `${searchPath}?q=${encodeURIComponent(query)}`
+            : searchPath;
     });
 </script>
 
