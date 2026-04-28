@@ -154,6 +154,16 @@ const query = Astro.url.searchParams.get("q") ?? "";
         cursor: pointer;
     }
 
+    .search-page-form input:focus-visible {
+        outline: 2px solid var(--page-accent);
+        outline-offset: 1px;
+    }
+
+    .search-page-form button:focus-visible {
+        outline: 2px dotted var(--page-accent);
+        outline-offset: -4px;
+    }
+
     .search-status {
         margin: 12px 0;
         font-size: 16px;

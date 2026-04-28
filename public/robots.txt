@@ -1,0 +1,7 @@
+# Update the Sitemap URL to your real domain after deploying.
+# The sitemap itself is generated automatically by @astrojs/sitemap on build.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://yoursite.com/sitemap-index.xml

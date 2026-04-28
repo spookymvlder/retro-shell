@@ -124,6 +124,17 @@ function formatDate(unix: number): string {
         cursor: pointer;
     }
 
+    .gb-form input:focus-visible,
+    .gb-form textarea:focus-visible {
+        outline: 2px solid var(--page-accent);
+        outline-offset: 1px;
+    }
+
+    .gb-form button:focus-visible {
+        outline: 2px dotted var(--page-accent);
+        outline-offset: -4px;
+    }
+
     .gb-entries {
         list-style: none;
         padding: 0;

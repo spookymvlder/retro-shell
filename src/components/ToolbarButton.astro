@@ -43,9 +43,15 @@ const {
         white-space: nowrap;
     }
 
-    .toolbar-button:hover {
+    .toolbar-button:hover,
+    .toolbar-button:focus-visible {
         background: #ffffcc;
         outline: 1px dotted #111;
+    }
+
+    .toolbar-button:focus-visible {
+        outline-style: solid;
+        outline-width: 2px;
     }
 
     .toolbar-button:active {
