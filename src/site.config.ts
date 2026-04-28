@@ -45,6 +45,20 @@ export interface SiteConfig {
     settings: {
         enabled: boolean;
     };
+    ticker: {
+        enabled: boolean;
+        /** Yahoo Finance symbols. Indices use the ^ prefix (^GSPC, ^DJI, ^IXIC). */
+        symbols: { symbol: string; label: string }[];
+        /** Seconds between client-side polls. Worker also caches at the edge. */
+        refreshSeconds: number;
+    };
+    hitCounter: {
+        enabled: boolean;
+        /** Optional copy shown before the count, e.g. "You are visitor #" */
+        prefix: string;
+        /** Optional copy shown after the count, e.g. " since April 2026" */
+        suffix: string;
+    };
     search: {
         enabled: boolean;
         /** Where the search form submits to, with ?q=... appended */
@@ -123,6 +137,27 @@ export const site: SiteConfig = {
 
     settings: {
         enabled: true,
+    },
+
+    ticker: {
+        enabled: true,
+        symbols: [
+            { symbol: "AAPL", label: "AAPL" },
+            { symbol: "MSFT", label: "MSFT" },
+            { symbol: "GOOGL", label: "GOOGL" },
+            { symbol: "AMZN", label: "AMZN" },
+            { symbol: "NVDA", label: "NVDA" },
+            { symbol: "^GSPC", label: "S&P 500" },
+            { symbol: "^IXIC", label: "NASDAQ" },
+            { symbol: "^DJI", label: "DOW" },
+        ],
+        refreshSeconds: 300,
+    },
+
+    hitCounter: {
+        enabled: true,
+        prefix: "You are visitor #",
+        suffix: "",
     },
 
     search: {

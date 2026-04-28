@@ -1,5 +1,6 @@
 ---
 import RetroShell from "../components/RetroShell.astro";
+import HitCounter from "../components/HitCounter.astro";
 
 export const prerender = true;
 
@@ -83,6 +84,8 @@ const news: NewsItem[] = [
         has the full setup walkthrough including the optional Cloudflare D1
         guestbook and Turnstile spam protection.
     </p>
+
+    <HitCounter />
 
     <p class="footer-line">
         ✦ Best viewed in Internet Explorer 5 ✦
