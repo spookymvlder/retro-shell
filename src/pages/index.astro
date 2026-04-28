@@ -97,9 +97,8 @@ const news: NewsItem[] = [
         max-width: 60ch;
     }
 
-    /* === Directory tiles styled as stickers ===
-       White cards with thick black borders and a hard offset shadow.
-       Alternating slight rotation so they feel hand-placed, not gridded. */
+    /* Directory grid is layout-specific to the home page.
+       The .sticker visual is defined globally in RetroShell.astro. */
     .directory {
         list-style: none;
         padding: 0;
@@ -110,111 +109,22 @@ const news: NewsItem[] = [
         max-width: 720px;
     }
 
-    .directory li:nth-child(odd) .sticker {
+    .directory li:nth-child(odd) :global(.sticker) {
         transform: rotate(-1.2deg);
     }
-    .directory li:nth-child(even) .sticker {
+    .directory li:nth-child(even) :global(.sticker) {
         transform: rotate(1deg);
     }
 
-    .sticker {
-        display: grid;
-        grid-template-columns: 56px 1fr;
-        grid-template-rows: auto auto;
-        column-gap: 14px;
-        row-gap: 4px;
-        align-items: center;
-        padding: 14px 18px;
-        background: #ffffff;
-        color: var(--page-text);
-        text-decoration: none;
-        border: 3px solid var(--page-text);
-        box-shadow: 5px 5px 0 var(--page-accent);
-        transition: transform 0.08s ease-out;
-    }
-
-    .sticker:hover {
-        background: var(--page-highlight);
-        transform: rotate(0) scale(1.02) !important;
-    }
-
-    .sticker:active {
-        transform: rotate(0) translate(3px, 3px) !important;
-        box-shadow: 2px 2px 0 var(--page-accent);
-    }
-
-    .sticker-icon {
-        grid-row: 1 / span 2;
-        width: 48px;
-        height: 48px;
-        image-rendering: pixelated;
-        object-fit: contain;
-    }
-
-    .sticker-label {
-        font-family: var(--page-heading-font);
-        font-size: 22px;
-        font-weight: bold;
-    }
-
-    .sticker-blurb {
-        font-size: 15px;
-        color: var(--page-muted);
-    }
-
-    /* === What's New panel ===
-       Soft-pink box with a "NEW!" sticker peeking off the corner. */
     .news {
-        position: relative;
         max-width: 540px;
         margin: 36px 0;
-        padding: 18px 24px 14px;
-        background: var(--page-accent-soft);
-        border: 3px solid var(--page-text);
-        box-shadow: 5px 5px 0 var(--page-accent);
-    }
-
-    .news-badge {
-        position: absolute;
-        top: -18px;
-        left: -14px;
-        padding: 4px 10px;
-        font-family: var(--page-heading-font);
-        font-weight: bold;
-        font-size: 18px;
-        color: white;
-        background: var(--page-accent);
-        border: 2px solid var(--page-text);
-        transform: rotate(-8deg);
-        box-shadow: 2px 2px 0 var(--page-text);
     }
 
     .news-heading {
         margin-top: 0 !important;
     }
 
-    .news-list {
-        list-style: none;
-        padding: 0;
-        margin: 6px 0 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .news-list li {
-        display: flex;
-        gap: 10px;
-        font-size: 16px;
-    }
-
-    .news-date {
-        flex: 0 0 80px;
-        font-weight: bold;
-        color: var(--page-accent);
-    }
-
-    /* === Cheeky footer ✦ === */
     .footer-line {
         margin-top: 48px;
         padding-top: 16px;
