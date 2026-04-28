@@ -50,7 +50,7 @@ export const site: SiteConfig = {
             { href: "/apollo-interface", label: "Apollo Interface", icon: "apollo", iconSize: "large" },
             { href: "/guestbook", label: "Guestbook", icon: "guestbook" },
             { href: "/about", label: "About", icon: "info" },
-            { href: "/template", label: "Get the template!", icon: "template" },
+            { href: "https://github.com/spookymvlder/retro-shell", label: "Get Retro Shell!", icon: "template" },
         ],
     ],
 
