@@ -151,12 +151,54 @@ urlForm?.addEventListener("submit", (event) => {
 
     .content {
         flex: 1;
-        padding: 34px 64px;
-        font-size: 20px;
-        line-height: 1.45;
+        padding: 34px 64px 60px;
+        font-family: var(--page-body-font);
+        font-size: 18px;
+        line-height: 1.5;
+        color: var(--page-text);
+        /* Subtle graph-paper grid + warm cream base. Replace with a tile image
+           via --page-bg if you want a more personal background. */
+        background-color: var(--page-bg);
+        background-image:
+            repeating-linear-gradient(0deg, transparent 0 19px, rgba(0, 0, 0, 0.05) 19px 20px),
+            repeating-linear-gradient(90deg, transparent 0 19px, rgba(0, 0, 0, 0.05) 19px 20px);
         overflow-y: auto;
         /* Firefox: thin retro-tinted scrollbar (no buttons available). */
         scrollbar-color: #d4d0c8 #ece9d8;
+    }
+
+    .content :global(a) {
+        color: var(--page-link);
+        text-decoration: underline;
+    }
+
+    .content :global(a:visited) {
+        color: var(--page-link-visited);
+    }
+
+    .content :global(a:hover) {
+        background: var(--page-highlight);
+    }
+
+    .content :global(h2) {
+        font-family: var(--page-heading-font);
+        font-size: 28px;
+        margin: 32px 0 14px;
+        padding-bottom: 4px;
+        border-bottom: 3px solid var(--page-accent);
+        display: inline-block;
+    }
+
+    .content :global(p) {
+        margin: 0 0 14px;
+    }
+
+    .content :global(code) {
+        padding: 1px 5px;
+        background: var(--page-accent-soft);
+        border: 1px solid var(--page-accent);
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.95em;
     }
 
     /* WebKit/Chromium: retro scrollbar with up/down buttons, hatched track,
@@ -212,14 +254,21 @@ urlForm?.addEventListener("submit", (event) => {
         display: none;
     }
 
+    /* Big serif headline with a chunky accent underline + offset shadow.
+       Replaces the previous boxed-out look. */
     .content :global(h1) {
         display: inline-block;
-        margin: 0 0 24px;
-        padding: 6px 38px;
-        font-size: 42px;
+        margin: 0 0 28px;
+        padding: 6px 4px;
+        font-family: var(--page-heading-font);
+        font-size: 44px;
         font-weight: normal;
-        border: 1px solid #222;
-        background: #f8f8f8;
+        line-height: 1.1;
+        color: var(--page-text);
+        background: var(--page-highlight);
+        box-shadow: 5px 5px 0 var(--page-accent);
+        border: 2px solid var(--page-text);
+        padding: 8px 20px;
     }
 
     .closed-message {
