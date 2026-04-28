@@ -7,6 +7,13 @@
 </span>
 
 <script>
+    interface WeatherResponse {
+        temperature: number;
+        unit: string;
+        shortForecast: string;
+        isDaytime: boolean;
+    }
+
     const weatherTemp = document.querySelector<HTMLElement>("#weather-temp");
     const weatherIcon = document.querySelector(".weather-icon");
 
@@ -21,7 +28,7 @@
     }
 
     fetch("/api/weather")
-        .then((res) => res.json())
+        .then((res) => res.json() as Promise<WeatherResponse>)
         .then((data) => {
             if (weatherTemp) {
                 weatherTemp.textContent = `${data.temperature}°${data.unit}`;
@@ -59,20 +66,31 @@
         border-radius: 50%;
     }
 
-    /* Crescent moon: yellow disc with a toolbar-bg disc overlapping to carve out the crescent. */
+    /* Moon: navy night-sky tile with a pale crescent. The ::before is the full
+       moon disc; the ::after is a navy disc offset on top to carve the crescent. */
     .weather-icon.moon {
-        background: #f0e0a0;
-        border-radius: 50%;
+        background: #1a1a4a;
+        border-radius: 4px;
     }
     .weather-icon.moon::before {
         content: "";
         position: absolute;
-        top: -1px;
-        left: 6px;
-        width: 20px;
-        height: 20px;
+        top: 4px;
+        left: 4px;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
-        background: #ece9d8;
+        background: #f0e8c0;
+    }
+    .weather-icon.moon::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 9px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #1a1a4a;
     }
 
     .weather-icon.cloud {
