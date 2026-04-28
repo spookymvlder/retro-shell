@@ -1,0 +1,40 @@
+---
+import RetroShell from "../components/RetroShell.astro";
+
+export const prerender = true;
+---
+
+<RetroShell
+    title="About"
+    description="A bit about who runs this site."
+    searchKeywords="about bio profile who introduction"
+>
+    <h1>About</h1>
+
+    <p class="lede">
+        Replace this page with a brief introduction to yourself or your project.
+    </p>
+
+    <h2>Who am I</h2>
+
+    <p>
+        Edit <code>src/pages/about.astro</code> to add your own content here.
+        A few photos, a paragraph about what you do, links to other places
+        you exist on the web — whatever you'd want a stranger to know.
+    </p>
+
+    <h2>What this site is</h2>
+
+    <p>
+        Built with <a href="https://github.com/spookymvlder/retro-shell">Retro Shell</a>,
+        a personal-website template that wraps your content in a fake late-90s
+        browser. The chrome around this page is fake. The page itself is real.
+    </p>
+</RetroShell>
+
+<style>
+    .lede {
+        font-size: 19px;
+        max-width: 60ch;
+    }
+</style>

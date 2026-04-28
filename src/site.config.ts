@@ -19,6 +19,10 @@ export interface SiteConfig {
     siteName: string;
     /** Shown after the page title in <title>: "Home | siteName" */
     titleSuffix: string;
+    /** Default description used in <meta> and Open Graph tags. Pages may override per-page. */
+    description: string;
+    /** Default Open Graph image, relative to /public. Recommended size: 1200x630. */
+    ogImage: string;
     /** Toolbar rows — each inner array becomes one row of buttons */
     toolbarRows: ToolbarLink[][];
     weather: {
@@ -67,8 +71,10 @@ export interface SiteConfig {
 }
 
 export const site: SiteConfig = {
-    siteName: "carlcarlcarl.com",
-    titleSuffix: "carlcarlcarl.com",
+    siteName: "yoursite.com",
+    titleSuffix: "yoursite.com",
+    description: "A personal website wrapped in a fake late-90s browser. Built with Retro Shell.",
+    ogImage: "/og-image.png",
 
     toolbarRows: [
         [
@@ -78,7 +84,6 @@ export const site: SiteConfig = {
             { href: "/contact", label: "Contact", icon: "mail" },
         ],
         [
-            { href: "/apollo-interface", label: "Apollo Interface", icon: "apollo", iconSize: "large" },
             { href: "/guestbook", label: "Guestbook", icon: "guestbook" },
             { href: "/about", label: "About", icon: "info" },
             { href: "/settings", label: "Settings", icon: "info" },
@@ -88,9 +93,12 @@ export const site: SiteConfig = {
 
     weather: {
         enabled: true,
+        // Default lat/lon: Tacoma, WA. Replace with your own (or use Settings → zip).
         lat: 47.205,
         lon: -122.540,
-        userAgent: "carlcarlcarl.com weather widget",
+        // weather.gov requires a contact string. Update this with your domain
+        // and an email address before deploying — they'll block generic UAs.
+        userAgent: "yoursite.com weather widget (contact@yoursite.com)",
         zipCountry: "us",
     },
 
