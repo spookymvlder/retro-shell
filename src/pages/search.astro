@@ -5,7 +5,10 @@ const query = Astro.url.searchParams.get("q") ?? "";
 ---
 
 <RetroShell title="Search">
-    <h1>FindIt! Search</h1>
+    <h1 class="search-heading">
+        <img src="/icons/search.png" alt="" class="search-logo" />
+        FindIt! Search
+    </h1>
 
     <form method="GET" action="/search" class="search-page-form">
         <label>
@@ -103,6 +106,19 @@ const query = Astro.url.searchParams.get("q") ?? "";
 </script>
 
 <style>
+    .search-heading {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .search-logo {
+        width: 40px;
+        height: 40px;
+        image-rendering: pixelated;
+        object-fit: contain;
+    }
+
     .search-page-form {
         display: flex;
         align-items: flex-end;
