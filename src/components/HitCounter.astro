@@ -1,0 +1,82 @@
+---
+import { site } from "../site.config";
+
+interface Props {
+    /** Path to track. Defaults to the current page's pathname. */
+    path?: string;
+    /** Number of digit places to pad to. Defaults to 6. */
+    digits?: number;
+}
+
+const { path, digits = 6 } = Astro.props as Props;
+const trackedPath = path ?? Astro.url.pathname;
+---
+
+{site.hitCounter.enabled && (
+    <div
+        class="hit-counter"
+        data-path={trackedPath}
+        data-digits={digits}
+    >
+        <span class="hit-prefix">{site.hitCounter.prefix}</span>
+        <span class="hit-display" id="hit-display">
+            {Array.from({ length: digits }, () => "0").join("")}
+        </span>
+        <span class="hit-suffix">{site.hitCounter.suffix}</span>
+    </div>
+)}
+
+<script>
+    const counter = document.querySelector<HTMLElement>(".hit-counter");
+    const display = document.querySelector<HTMLElement>("#hit-display");
+
+    if (counter && display) {
+        const path = counter.dataset.path ?? "/";
+        const digits = Number(counter.dataset.digits ?? "6");
+
+        function render(count: number) {
+            display!.textContent = String(count).padStart(digits, "0");
+        }
+
+        fetch("/api/hits", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ path }),
+        })
+            .then((res) => res.json() as Promise<{ count: number }>)
+            .then((data) => render(data.count))
+            .catch(() => {
+                /* Leave the placeholder zeros if the increment fails. */
+            });
+    }
+</script>
+
+<style>
+    .hit-counter {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 24px 0 0;
+        font-size: 15px;
+        color: var(--page-muted);
+    }
+
+    /* LCD-style digit display: black background, glowing green digits,
+       sunken bevel border like an old odometer / counter widget. */
+    .hit-display {
+        display: inline-block;
+        padding: 4px 10px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 3px;
+        color: #00ff66;
+        background: #000000;
+        text-shadow: 0 0 4px #00ff66;
+        border: 2px solid;
+        border-top-color: #404040;
+        border-left-color: #404040;
+        border-right-color: #ffffff;
+        border-bottom-color: #ffffff;
+    }
+</style>

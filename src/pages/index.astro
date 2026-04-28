@@ -1,5 +1,6 @@
 ---
 import RetroShell from "../components/RetroShell.astro";
+import HitCounter from "../components/HitCounter.astro";
 
 export const prerender = true;
 
@@ -84,12 +85,7 @@ const news: NewsItem[] = [
         guestbook and Turnstile spam protection.
     </p>
 
-    <p>
-        Don't like a piece of the chrome? Toolbar buttons, the weather widget,
-        the search box, the guestbook, and the taskbar clock can each be toggled
-        individually in the config.
-    </p>
-
+    <HitCounter />
 </RetroShell>
 
 <style>

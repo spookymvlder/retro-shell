@@ -2,9 +2,11 @@
 import ToolbarButton from "./ToolbarButton.astro";
 import WeatherWidget from "./WeatherWidget.astro";
 import SearchForm from "./SearchForm.astro";
+import Ticker from "./Ticker.astro";
 import { site } from "../site.config";
 
 // Weather + search live on the first row, after the configured buttons.
+// The ticker (if enabled) gets its own thin strip at the bottom.
 ---
 
 <div class="toolbar-clutter">
@@ -23,6 +25,7 @@ import { site } from "../site.config";
             {rowIndex === 0 && site.search.enabled && <SearchForm />}
         </div>
     ))}
+    {site.ticker.enabled && <Ticker />}
 </div>
 
 <style>
