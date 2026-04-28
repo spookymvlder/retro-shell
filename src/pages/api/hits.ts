@@ -17,10 +17,15 @@ export async function GET({ url }: APIContext) {
     if (!site.hitCounter.enabled) return Response.json({ count: 0 });
 
     const path = normalize(url.searchParams.get("path") ?? "/");
-    const row = await env.DB.prepare("SELECT count FROM page_views WHERE path = ?")
-        .bind(path)
-        .first<CountRow>();
-    return Response.json({ count: row?.count ?? 0 });
+    try {
+        const row = await env.DB.prepare("SELECT count FROM page_views WHERE path = ?")
+            .bind(path)
+            .first<CountRow>();
+        return Response.json({ count: row?.count ?? 0 });
+    } catch {
+        // Table missing, DB unbound, etc. — degrade gracefully so the UI just shows zeros.
+        return Response.json({ count: 0 });
+    }
 }
 
 /** POST /api/hits with JSON { path } — increments and returns the new count. */
@@ -35,21 +40,25 @@ export async function POST({ request }: APIContext) {
         // Default to "/" on bad payloads.
     }
 
-    const now = Math.floor(Date.now() / 1000);
+    try {
+        const now = Math.floor(Date.now() / 1000);
 
-    await env.DB.prepare(
-        `INSERT INTO page_views (path, count, updated_at)
-         VALUES (?, 1, ?)
-         ON CONFLICT(path) DO UPDATE SET
-             count = count + 1,
-             updated_at = excluded.updated_at`,
-    )
-        .bind(path, now)
-        .run();
+        await env.DB.prepare(
+            `INSERT INTO page_views (path, count, updated_at)
+             VALUES (?, 1, ?)
+             ON CONFLICT(path) DO UPDATE SET
+                 count = count + 1,
+                 updated_at = excluded.updated_at`,
+        )
+            .bind(path, now)
+            .run();
 
-    const row = await env.DB.prepare("SELECT count FROM page_views WHERE path = ?")
-        .bind(path)
-        .first<CountRow>();
+        const row = await env.DB.prepare("SELECT count FROM page_views WHERE path = ?")
+            .bind(path)
+            .first<CountRow>();
 
-    return Response.json({ count: row?.count ?? 1 });
+        return Response.json({ count: row?.count ?? 1 });
+    } catch {
+        return Response.json({ count: 0 });
+    }
 }
