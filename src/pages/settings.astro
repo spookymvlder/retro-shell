@@ -51,7 +51,6 @@ export const prerender = true;
             <button type="submit">Save</button>
             <button type="button" id="reset-button">Reset to defaults</button>
         </div>
-        <p id="settings-status" class="status" aria-live="polite"></p>
     </form>
 </RetroShell>
 
@@ -62,17 +61,7 @@ export const prerender = true;
     const zip = document.querySelector<HTMLInputElement>("#zip");
     const tz = document.querySelector<HTMLSelectElement>("#timezone");
     const fmt = document.querySelector<HTMLSelectElement>("#clock-format");
-    const status = document.querySelector<HTMLElement>("#settings-status");
     const resetBtn = document.querySelector<HTMLButtonElement>("#reset-button");
-
-    function showStatus(message: string) {
-        if (status) {
-            status.textContent = message;
-            setTimeout(() => {
-                if (status.textContent === message) status.textContent = "";
-            }, 2500);
-        }
-    }
 
     // Pre-fill from existing settings.
     const current = loadSettings();
@@ -88,15 +77,12 @@ export const prerender = true;
             clockFormat: (fmt?.value || undefined) as "12h" | "24h" | undefined,
         };
         saveSettings(next);
-        showStatus("Settings saved.");
+        location.reload();
     });
 
     resetBtn?.addEventListener("click", () => {
         clearSettings();
-        if (zip) zip.value = "";
-        if (tz) tz.value = "";
-        if (fmt) fmt.value = "";
-        showStatus("Reset to site defaults.");
+        location.reload();
     });
 </script>
 
@@ -162,10 +148,4 @@ export const prerender = true;
         cursor: pointer;
     }
 
-    .status {
-        min-height: 1.4em;
-        margin: 0;
-        font-size: 16px;
-        color: #006400;
-    }
 </style>
