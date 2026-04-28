@@ -195,12 +195,114 @@ urlForm?.addEventListener("submit", (event) => {
         margin: 0 0 14px;
     }
 
+    .content :global(h3) {
+        font-family: var(--page-heading-font);
+        font-size: 22px;
+        margin: 24px 0 10px;
+    }
+
     .content :global(code) {
         padding: 1px 5px;
         background: var(--page-accent-soft);
         border: 1px solid var(--page-accent);
         font-family: "Courier New", Courier, monospace;
         font-size: 0.95em;
+    }
+
+    /* === Reusable content components ===
+       Use these classes on any page that opts into variant="page". The home
+       page composes .sticker into a grid; the Theme & Style Guide page
+       demonstrates them standalone. Style overrides per page are still fine. */
+
+    /* Sticker — chunky white card with magenta drop shadow. */
+    .content :global(.sticker) {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        grid-template-rows: auto auto;
+        column-gap: 14px;
+        row-gap: 4px;
+        align-items: center;
+        padding: 14px 18px;
+        background: #ffffff;
+        color: var(--page-text);
+        text-decoration: none;
+        border: 3px solid var(--page-text);
+        box-shadow: 5px 5px 0 var(--page-accent);
+        transition: transform 0.08s ease-out;
+    }
+
+    .content :global(.sticker:hover) {
+        background: var(--page-highlight);
+        transform: scale(1.02);
+    }
+
+    .content :global(.sticker:active) {
+        transform: translate(3px, 3px);
+        box-shadow: 2px 2px 0 var(--page-accent);
+    }
+
+    .content :global(.sticker-icon) {
+        grid-row: 1 / span 2;
+        width: 48px;
+        height: 48px;
+        image-rendering: pixelated;
+        object-fit: contain;
+    }
+
+    .content :global(.sticker-label) {
+        font-family: var(--page-heading-font);
+        font-size: 22px;
+        font-weight: bold;
+    }
+
+    .content :global(.sticker-blurb) {
+        font-size: 15px;
+        color: var(--page-muted);
+    }
+
+    /* News — soft-pink callout box with a rotated NEW! badge. */
+    .content :global(.news) {
+        position: relative;
+        padding: 18px 24px 14px;
+        background: var(--page-accent-soft);
+        border: 3px solid var(--page-text);
+        box-shadow: 5px 5px 0 var(--page-accent);
+    }
+
+    .content :global(.news-badge) {
+        position: absolute;
+        top: -18px;
+        left: -14px;
+        padding: 4px 10px;
+        font-family: var(--page-heading-font);
+        font-weight: bold;
+        font-size: 18px;
+        color: white;
+        background: var(--page-accent);
+        border: 2px solid var(--page-text);
+        transform: rotate(-8deg);
+        box-shadow: 2px 2px 0 var(--page-text);
+    }
+
+    .content :global(.news-list) {
+        list-style: none;
+        padding: 0;
+        margin: 6px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .content :global(.news-list li) {
+        display: flex;
+        gap: 10px;
+        font-size: 16px;
+    }
+
+    .content :global(.news-date) {
+        flex: 0 0 80px;
+        font-weight: bold;
+        color: var(--page-accent);
     }
 
     /* WebKit/Chromium: retro scrollbar with up/down buttons, hatched track,

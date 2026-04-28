@@ -1,0 +1,28 @@
+---
+import RetroShell from "../components/RetroShell.astro";
+import ThemeShowcase from "../components/ThemeShowcase.astro";
+
+export const prerender = true;
+---
+
+<RetroShell
+    title="Theme & Style Guide"
+    searchKeywords="theme style guide colors fonts customization tokens stickers news template"
+>
+    <h1>Theme & Style Guide</h1>
+
+    <p class="lede">
+        A live demo of every themable piece of Retro Shell's page-content
+        variant. Edit the tokens, refresh, and see the whole site shift.
+        Delete this page (<code>src/pages/theme.astro</code>) before you ship.
+    </p>
+
+    <ThemeShowcase />
+</RetroShell>
+
+<style>
+    .lede {
+        font-size: 19px;
+        max-width: 60ch;
+    }
+</style>

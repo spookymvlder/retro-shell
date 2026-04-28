@@ -1,0 +1,184 @@
+---
+// A live demo of every themable piece of the page-content variant.
+// Drop <ThemeShowcase /> into any page that uses RetroShell (variant="page")
+// to show adopters what their site offers and what each token controls.
+
+interface Token {
+    name: string;
+    label: string;
+    /** "swatch" tokens render as a color square; others render as a label only. */
+    kind?: "color" | "font";
+}
+
+const colorTokens: Token[] = [
+    { name: "--page-bg", label: "Page background" },
+    { name: "--page-text", label: "Body text" },
+    { name: "--page-muted", label: "Muted text" },
+    { name: "--page-accent", label: "Accent" },
+    { name: "--page-accent-soft", label: "Accent (soft)" },
+    { name: "--page-highlight", label: "Highlight" },
+    { name: "--page-link", label: "Link" },
+    { name: "--page-link-visited", label: "Visited link" },
+];
+
+const fontTokens: Token[] = [
+    { name: "--page-heading-font", label: "Heading font" },
+    { name: "--page-body-font", label: "Body font" },
+];
+---
+
+<section class="showcase">
+    <h2>Color tokens</h2>
+    <p>
+        Edit these in the <code>:root</code> block at the top of
+        <code>src/layouts/Layout.astro</code>. Every component below picks
+        them up automatically.
+    </p>
+    <ul class="swatches">
+        {colorTokens.map((t) => (
+            <li class="swatch">
+                <span class="swatch-color" style={`background: var(${t.name})`}></span>
+                <code>{t.name}</code>
+                <span class="swatch-label">{t.label}</span>
+            </li>
+        ))}
+    </ul>
+
+    <h2>Font tokens</h2>
+    <ul class="font-list">
+        {fontTokens.map((t) => (
+            <li>
+                <code>{t.name}</code>
+                <span style={`font-family: var(${t.name})`}>The quick brown fox jumps over the lazy dog.</span>
+            </li>
+        ))}
+    </ul>
+
+    <h2>Typography</h2>
+    <p>
+        This is body text. Inline <a href="/">links look like this</a>, and
+        you can drop <code>inline code</code> inside paragraphs. Text is
+        styled by <code>--page-body-font</code> and <code>--page-text</code>.
+    </p>
+    <h3>Subheading (h3)</h3>
+    <p>
+        Sub-sections use a slightly smaller serif. Headings are styled by
+        <code>--page-heading-font</code>; the <code>h2</code> underline uses
+        <code>--page-accent</code>.
+    </p>
+
+    <h2>Sticker</h2>
+    <p>
+        Use <code>class="sticker"</code> for chunky clickable cards. Pair
+        with <code>sticker-icon</code>, <code>sticker-label</code>, and
+        <code>sticker-blurb</code> children. Hover and active states are
+        themed automatically.
+    </p>
+    <a class="sticker showcase-sticker" href="/">
+        <img class="sticker-icon" src="/icons/info.png" alt="" loading="lazy" />
+        <span class="sticker-label">Sticker title</span>
+        <span class="sticker-blurb">A short description goes here.</span>
+    </a>
+
+    <h2>News panel</h2>
+    <p>
+        Use <code>class="news"</code> for callout boxes. Optional
+        <code>news-badge</code> child renders a rotated label sticker.
+        <code>news-list</code> + <code>news-date</code> give a tidy
+        timestamped feed.
+    </p>
+    <div class="news showcase-news">
+        <span class="news-badge">NEW!</span>
+        <h3 style="margin-top: 0">Recent updates</h3>
+        <ul class="news-list">
+            <li>
+                <span class="news-date">Apr 2026</span>
+                <span>An example item to show the date column.</span>
+            </li>
+            <li>
+                <span class="news-date">Mar 2026</span>
+                <span>Items stack vertically with consistent spacing.</span>
+            </li>
+        </ul>
+    </div>
+
+    <h2>Override</h2>
+    <p>
+        To retheme without touching components, edit the values in
+        <code>src/layouts/Layout.astro</code>. To swap the graph-paper
+        background for a tiled image, change the <code>background-image</code>
+        on <code>.content</code> in <code>src/components/RetroShell.astro</code>.
+    </p>
+</section>
+
+<style>
+    .showcase :global(h2) {
+        margin-top: 36px;
+    }
+
+    .swatches {
+        list-style: none;
+        padding: 0;
+        margin: 12px 0 24px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 14px;
+    }
+
+    .swatch {
+        display: grid;
+        grid-template-columns: 36px 1fr;
+        grid-template-rows: auto auto;
+        column-gap: 10px;
+        row-gap: 2px;
+        align-items: center;
+        padding: 8px 10px;
+        background: #ffffff;
+        border: 2px solid var(--page-text);
+    }
+
+    .swatch-color {
+        grid-row: 1 / span 2;
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--page-text);
+    }
+
+    .swatch code {
+        font-size: 13px;
+    }
+
+    .swatch-label {
+        font-size: 13px;
+        color: var(--page-muted);
+    }
+
+    .font-list {
+        list-style: none;
+        padding: 0;
+        margin: 12px 0 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .font-list li {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+    }
+
+    .font-list code {
+        flex: 0 0 180px;
+    }
+
+    .showcase-sticker {
+        max-width: 320px;
+        margin: 8px 0 24px;
+    }
+
+    .showcase-news {
+        max-width: 480px;
+        margin: 8px 0 24px;
+    }
+</style>
