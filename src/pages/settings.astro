@@ -14,11 +14,26 @@ export const prerender = true;
         <div class="dialog-titlebar">System Settings</div>
 
         <form id="settings-form" class="dialog-body">
-            <div class="tab-strip">
-                <span class="tab tab--active">Display</span>
+            <div class="tab-strip" role="tablist">
+                <button
+                    type="button"
+                    class="tab tab--active"
+                    role="tab"
+                    data-tab="display"
+                    aria-selected="true"
+                    aria-controls="tab-display"
+                >Display</button>
+                <button
+                    type="button"
+                    class="tab"
+                    role="tab"
+                    data-tab="theme"
+                    aria-selected="false"
+                    aria-controls="tab-theme"
+                >Appearance</button>
             </div>
 
-            <div class="tab-pane">
+            <div class="tab-pane" id="tab-display" data-tabpane="display" role="tabpanel">
                 <fieldset class="groove">
                     <legend>Weather</legend>
                     <div class="form-row">
@@ -61,6 +76,23 @@ export const prerender = true;
                 </fieldset>
             </div>
 
+            <div class="tab-pane" id="tab-theme" data-tabpane="theme" role="tabpanel" hidden>
+                <fieldset class="groove">
+                    <legend>Theme</legend>
+                    <div class="form-row">
+                        <label for="theme">Color scheme:</label>
+                        <span class="select-wrap">
+                            <select id="theme" name="theme">
+                                <option value="">Site default ({site.darkMode.default})</option>
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                            </select>
+                        </span>
+                    </div>
+                    <p class="hint">The toolbar sun/moon button toggles between light and dark — use this to clear that override.</p>
+                </fieldset>
+            </div>
+
             <div class="dialog-actions">
                 <button type="submit">Save</button>
                 <button type="button" id="reset-button">Reset to defaults</button>
@@ -76,13 +108,32 @@ export const prerender = true;
     const zip = document.querySelector<HTMLInputElement>("#zip");
     const tz = document.querySelector<HTMLSelectElement>("#timezone");
     const fmt = document.querySelector<HTMLSelectElement>("#clock-format");
+    const themeSelect = document.querySelector<HTMLSelectElement>("#theme");
     const resetBtn = document.querySelector<HTMLButtonElement>("#reset-button");
+
+    // Tab switching: clicking a tab shows its matching pane and hides the rest.
+    const tabs = document.querySelectorAll<HTMLButtonElement>(".tab");
+    const panes = document.querySelectorAll<HTMLElement>(".tab-pane");
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const target = tab.dataset.tab;
+            tabs.forEach((t) => {
+                const active = t === tab;
+                t.classList.toggle("tab--active", active);
+                t.setAttribute("aria-selected", active ? "true" : "false");
+            });
+            panes.forEach((pane) => {
+                pane.hidden = pane.dataset.tabpane !== target;
+            });
+        });
+    });
 
     // Pre-fill from existing settings.
     const current = loadSettings();
     if (zip) zip.value = current.zip ?? "";
     if (tz) tz.value = current.timezone ?? "";
     if (fmt) fmt.value = current.clockFormat ?? "";
+    if (themeSelect) themeSelect.value = current.theme ?? "";
 
     form?.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -90,6 +141,7 @@ export const prerender = true;
             zip: zip?.value.trim() || undefined,
             timezone: tz?.value || undefined,
             clockFormat: (fmt?.value || undefined) as "12h" | "24h" | undefined,
+            theme: (themeSelect?.value || undefined) as "light" | "dark" | undefined,
         };
         saveSettings(next);
         location.reload();
@@ -142,6 +194,7 @@ export const prerender = true;
     .tab {
         padding: 4px 18px 5px;
         font: 13px Tahoma, sans-serif;
+        color: #000;
         background: #c0c0c0;
         border: 1px solid;
         border-top-color: #ffffff;
@@ -150,11 +203,17 @@ export const prerender = true;
         border-bottom: 0;
         border-radius: 3px 3px 0 0;
         margin-bottom: -1px;
-        cursor: default;
+        cursor: pointer;
+    }
+
+    .tab:focus-visible {
+        outline: 1px dotted #000;
+        outline-offset: -4px;
     }
 
     .tab--active {
         padding-bottom: 6px;
+        cursor: default;
     }
 
     .tab-pane {
