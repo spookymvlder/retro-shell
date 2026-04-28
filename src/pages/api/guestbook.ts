@@ -1,17 +1,6 @@
 import type { APIContext } from "astro";
+import { env } from "cloudflare:workers";
 import { site } from "../../site.config";
-
-interface Env {
-    DB: D1Database;
-    TURNSTILE_SECRET: string;
-    IP_HASH_SALT: string;
-}
-
-function getEnv(context: APIContext): Env {
-    const runtime = (context.locals as { runtime?: { env: Env } }).runtime;
-    if (!runtime) throw new Error("Cloudflare runtime not available");
-    return runtime.env;
-}
 
 async function hashIp(ip: string, salt: string): Promise<string> {
     const data = new TextEncoder().encode(`${salt}:${ip}`);
@@ -42,7 +31,6 @@ function jsonError(status: number, message: string) {
 export async function POST(context: APIContext) {
     if (!site.guestbook.enabled) return jsonError(404, "Guestbook is disabled.");
 
-    const env = getEnv(context);
     const ip = context.request.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
 
     let form: FormData;

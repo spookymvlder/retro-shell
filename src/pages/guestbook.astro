@@ -1,5 +1,6 @@
 ---
 import RetroShell from "../components/RetroShell.astro";
+import { env } from "cloudflare:workers";
 import { site } from "../site.config";
 
 interface Entry {
@@ -9,15 +10,14 @@ interface Entry {
     created_at: number;
 }
 
-const runtime = (Astro.locals as { runtime?: { env: { DB: D1Database } } }).runtime;
-const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+const siteKey = env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
 let entries: Entry[] = [];
 let loadError: string | null = null;
 
-if (site.guestbook.enabled && runtime) {
+if (site.guestbook.enabled) {
     try {
-        const result = await runtime.env.DB.prepare(
+        const result = await env.DB.prepare(
             "SELECT id, name, message, created_at FROM entries ORDER BY created_at DESC LIMIT ?",
         )
             .bind(site.guestbook.entriesPerPage)
