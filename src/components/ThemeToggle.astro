@@ -1,0 +1,100 @@
+---
+// Toolbar toggle that flips between light and dark page themes.
+// The actual theme application happens via the inline script in Layout.astro
+// (which runs before paint to avoid a flash). This button just persists the
+// user's choice and updates the data-theme attribute.
+---
+
+<button
+    id="theme-toggle"
+    class="theme-toggle"
+    aria-label="Toggle dark mode"
+    title="Toggle dark mode"
+>
+    <span class="sun-moon" aria-hidden="true"></span>
+</button>
+
+<script>
+    import { loadSettings, saveSettings } from "../lib/userSettings";
+
+    const button = document.querySelector<HTMLButtonElement>("#theme-toggle");
+
+    button?.addEventListener("click", () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute("data-theme") === "dark";
+        const next = isDark ? "light" : "dark";
+
+        if (next === "dark") {
+            html.setAttribute("data-theme", "dark");
+        } else {
+            html.removeAttribute("data-theme");
+        }
+
+        const settings = loadSettings();
+        saveSettings({ ...settings, theme: next });
+    });
+</script>
+
+<style>
+    .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 32px;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+    }
+
+    .theme-toggle:hover,
+    .theme-toggle:focus-visible {
+        background: #ffffcc;
+        outline: 1px dotted #111;
+    }
+
+    .theme-toggle:focus-visible {
+        outline-style: solid;
+        outline-width: 2px;
+    }
+
+    /* Light mode: shows a moon (click to go dark).
+       The yellow circle is "the moon disc"; the toolbar-bg overlay carves
+       the crescent shape. Dark mode hides the carve so just the sun remains. */
+    .sun-moon {
+        position: relative;
+        display: block;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #ffd21a;
+        border: 1px solid #444;
+    }
+
+    .sun-moon::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: 5px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #ece9d8; /* matches toolbar bg */
+    }
+
+    /* Dark mode: hide the carve so the icon reads as a full sun (click to
+       go back to light). Add a few rays via box-shadow for clarity. */
+    :global([data-theme="dark"]) .sun-moon::before {
+        display: none;
+    }
+
+    :global([data-theme="dark"]) .sun-moon {
+        background: #ffd21a;
+        box-shadow:
+            0 -5px 0 -3px #ffd21a,
+            0 5px 0 -3px #ffd21a,
+            -5px 0 0 -3px #ffd21a,
+            5px 0 0 -3px #ffd21a;
+    }
+</style>

@@ -45,6 +45,11 @@ export interface SiteConfig {
     settings: {
         enabled: boolean;
     };
+    darkMode: {
+        enabled: boolean;
+        /** "light", "dark", or "auto" (follow system preference). User toggle overrides. */
+        default: "light" | "dark" | "auto";
+    };
     ticker: {
         enabled: boolean;
         /** Yahoo Finance symbols. Indices use the ^ prefix (^GSPC, ^DJI, ^IXIC). */
@@ -137,6 +142,11 @@ export const site: SiteConfig = {
 
     settings: {
         enabled: true,
+    },
+
+    darkMode: {
+        enabled: true,
+        default: "auto",
     },
 
     ticker: {

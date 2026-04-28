@@ -5,6 +5,7 @@ export interface UserSettings {
     zip?: string;
     timezone?: string;
     clockFormat?: "12h" | "24h";
+    theme?: "light" | "dark";
 }
 
 const KEY = "retro-shell:settings";
