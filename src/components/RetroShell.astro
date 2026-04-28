@@ -8,9 +8,11 @@ import Taskbar from "./Taskbar.astro";
 
 interface Props {
     title?: string;
+    /** Extra keywords for site search to find this page (off-screen). */
+    searchKeywords?: string;
 }
 
-const { title = "Home" } = Astro.props as Props;
+const { title = "Home", searchKeywords } = Astro.props as Props;
 ---
 
 <Layout title={title}>
@@ -22,6 +24,9 @@ const { title = "Home" } = Astro.props as Props;
 
             <div class="content-shell">
                 <article class="content" data-pagefind-body>
+                    {searchKeywords && (
+                        <span class="visually-hidden">{searchKeywords}</span>
+                    )}
                     <slot />
                 </article>
                 <FakeScrollbar />
@@ -175,5 +180,18 @@ const { title = "Home" } = Astro.props as Props;
 
     .hidden {
         display: none;
+    }
+
+    /* Off-screen but still in the DOM — Pagefind reads it, users don't see it. */
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
     }
 </style>
