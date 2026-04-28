@@ -33,6 +33,24 @@ export interface SiteConfig {
         /** Where the search form submits to, with ?q=... appended */
         path: string;
     };
+    guestbook: {
+        enabled: boolean;
+        /** Per-IP rate limits enforced by the API endpoint */
+        rateLimit: {
+            /** Minimum seconds between posts from the same IP */
+            minSecondsBetweenPosts: number;
+            /** Max posts from the same IP within the rolling window */
+            maxPostsPerWindow: number;
+            /** Window length in seconds */
+            windowSeconds: number;
+        };
+        /** Maximum length of a single entry's message field */
+        maxMessageLength: number;
+        /** Maximum length of the name field */
+        maxNameLength: number;
+        /** How many entries to show on the guestbook page */
+        entriesPerPage: number;
+    };
 }
 
 export const site: SiteConfig = {
@@ -64,5 +82,17 @@ export const site: SiteConfig = {
     search: {
         enabled: true,
         path: "/search",
+    },
+
+    guestbook: {
+        enabled: true,
+        rateLimit: {
+            minSecondsBetweenPosts: 30,
+            maxPostsPerWindow: 3,
+            windowSeconds: 3600,
+        },
+        maxMessageLength: 1000,
+        maxNameLength: 60,
+        entriesPerPage: 50,
     },
 };

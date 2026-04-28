@@ -1,0 +1,28 @@
+{
+    // Worker name shown in the Cloudflare dashboard. Change this for your own deploy.
+    "name": "retro-shell",
+
+    "compatibility_date": "2025-04-01",
+    "compatibility_flags": ["nodejs_compat"],
+
+    // D1 binding for the guestbook.
+    // Create with:  wrangler d1 create retro-shell-guestbook
+    // Then paste the returned database_id here.
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "retro-shell-guestbook",
+            "database_id": "REPLACE_WITH_YOUR_DATABASE_ID",
+            "migrations_dir": "migrations"
+        }
+    ],
+
+    // Non-secret values committed to the repo.
+    // Secrets (TURNSTILE_SECRET, IP_HASH_SALT) are set via `wrangler secret put`
+    // for production and via .dev.vars for local development.
+    "vars": {
+        // Cloudflare's "always passes" Turnstile test key. Replace with your real site key.
+        // The PUBLIC_ prefix exposes it to the browser, which Turnstile needs.
+        "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+    }
+}

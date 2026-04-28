@@ -1,0 +1,11 @@
+# Copy this file to `.dev.vars` for local development with `astro dev`.
+# Wrangler also reads this file for `wrangler dev`.
+# Both files are gitignored.
+
+# Turnstile secret key — paired with the site key in wrangler.jsonc.
+# Use Cloudflare's always-passes test secret locally:
+TURNSTILE_SECRET="1x0000000000000000000000000000000AA"
+
+# Random string used to salt IP hashes before storing them in D1.
+# Generate one with:  openssl rand -hex 32
+IP_HASH_SALT="replace-me-with-a-long-random-string"
