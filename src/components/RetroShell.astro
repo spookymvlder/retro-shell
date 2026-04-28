@@ -113,18 +113,23 @@ const { title = "Home", searchKeywords } = Astro.props as Props;
 </script>
 
 <style>
+    /* Pin the desktop to the viewport so the browser window doesn't push
+       the page taller. Internal scrolling lives inside .content. */
     .desktop {
-        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
         padding: 28px 28px 62px;
         display: flex;
         justify-content: center;
         align-items: flex-start;
     }
 
-    /* Locked to a 13" laptop width. Mobile/responsive rules can be added later. */
+    /* Locked to a 13" laptop width. Mobile/responsive rules can be added later.
+       Fixed height (capped at 820px) so the window itself never grows; long
+       content scrolls inside .content. */
     .browser-window {
         width: min(calc(100vw - 48px), 1280px);
-        min-height: min(820px, calc(100vh - 110px));
+        height: min(820px, calc(100vh - 110px));
         display: flex;
         flex-direction: column;
         background: #ece9d8;
@@ -138,12 +143,13 @@ const { title = "Home", searchKeywords } = Astro.props as Props;
 
     /* flex: 1 so the white content area fills the rest of the window —
        prevents the beige browser-window background from peeking through below.
+       min-height: 0 lets the flex child shrink so .content's overflow can scroll.
        Margin gives a Win98-style beige frame around the content; the sunken
        border completes the recessed-pane look. */
     .content-shell {
         flex: 1;
+        min-height: 0;
         display: flex;
-        min-height: 520px;
         margin: 0 3px 3px;
         background: white;
         border: 2px solid;
