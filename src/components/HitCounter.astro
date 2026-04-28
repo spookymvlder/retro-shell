@@ -10,9 +10,14 @@ interface Props {
 
 const { path, digits = 6 } = Astro.props as Props;
 const trackedPath = path ?? Astro.url.pathname;
+
+// Skip rendering during `astro dev` so the missing local D1 table doesn't
+// produce console errors. The counter renders normally in `astro build`
+// (and therefore in `npm run preview` and production).
+const showCounter = site.hitCounter.enabled && !import.meta.env.DEV;
 ---
 
-{site.hitCounter.enabled && (
+{showCounter && (
     <div
         class="hit-counter"
         data-path={trackedPath}
