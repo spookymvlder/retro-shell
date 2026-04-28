@@ -120,6 +120,8 @@ const { title = "Home" } = Astro.props as Props;
     .browser-window {
         width: min(calc(100vw - 48px), 1280px);
         min-height: min(820px, calc(100vh - 110px));
+        display: flex;
+        flex-direction: column;
         background: #ece9d8;
         border: 2px solid #ffffff;
         border-right-color: #404040;
@@ -129,7 +131,10 @@ const { title = "Home" } = Astro.props as Props;
             8px 8px 20px rgb(0 0 0 / 0.35);
     }
 
+    /* flex: 1 so the white content area fills the rest of the window —
+       prevents the beige browser-window background from peeking through below. */
     .content-shell {
+        flex: 1;
         display: flex;
         min-height: 520px;
         background: white;
