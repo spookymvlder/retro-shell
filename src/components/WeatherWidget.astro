@@ -7,6 +7,13 @@
 </span>
 
 <script>
+    interface WeatherResponse {
+        temperature: number;
+        unit: string;
+        shortForecast: string;
+        isDaytime: boolean;
+    }
+
     const weatherTemp = document.querySelector<HTMLElement>("#weather-temp");
     const weatherIcon = document.querySelector(".weather-icon");
 
@@ -21,7 +28,7 @@
     }
 
     fetch("/api/weather")
-        .then((res) => res.json())
+        .then((res) => res.json() as Promise<WeatherResponse>)
         .then((data) => {
             if (weatherTemp) {
                 weatherTemp.textContent = `${data.temperature}°${data.unit}`;
