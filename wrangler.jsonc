@@ -23,6 +23,6 @@
     "vars": {
         // Cloudflare's "always passes" Turnstile test key. Replace with your real site key.
         // The PUBLIC_ prefix exposes it to the browser, which Turnstile needs.
-        "PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADEth6mv9oC6aZgr"
+        "PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
     }
 }
