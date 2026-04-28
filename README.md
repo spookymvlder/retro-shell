@@ -1,46 +1,71 @@
-# Astro Starter Kit: Basics
+# Retro Shell
+
+A personal-website template that wraps your content in a fake late-90s / early-2000s
+browser window — title bar, address bar, cluttered toolbars, taskbar, the works.
+Built with [Astro](https://astro.build).
+
+The shell is locked to a 13" laptop width (1280px max). Mobile is not supported yet.
+
+## Quick start
 
 ```sh
-npm create astro@latest -- --template basics
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open `http://localhost:4321`.
 
-## 🚀 Project Structure
+## Making it yours
 
-Inside of your Astro project, you'll see the following folders and files:
+Almost everything you'll want to change lives in [`src/site.config.ts`](src/site.config.ts):
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+- `siteName` — shown in the title bar and address bar (e.g. `"yoursite.com"`)
+- `titleSuffix` — the right side of the `<title>` tag
+- `toolbarRows` — an array of arrays of buttons. Each inner array is one row.
+  Each button is `{ href, label, icon, iconSize?, external? }`.
+- `weather` — lat/lon and the User-Agent string sent to api.weather.gov.
+  Set `enabled: false` to hide the widget.
+- `search` — toggle the FindIt! search box and set where it submits.
+
+Replace the icon PNGs in `public/icons/` with your own (keep the same filenames,
+or update `icon` values in the config to match new ones). Replace `public/favicon.*`
+with your own favicon.
+
+Add pages by dropping new `.astro` files into `src/pages/` and wrapping their
+contents in `<RetroShell title="Page name">…</RetroShell>`. See
+[`src/pages/index.astro`](src/pages/index.astro) for the pattern.
+
+## Project structure
+
+```
+src/
+├── site.config.ts        ← edit this
+├── layouts/
+│   └── Layout.astro      ← <html>/<head>, global styles
+├── components/
+│   ├── RetroShell.astro  ← composes the whole browser window
+│   ├── TitleBar.astro
+│   ├── NavBar.astro      ← back/forward/home + address bar
+│   ├── Toolbar.astro     ← renders rows from site.config
+│   ├── ToolbarButton.astro
+│   ├── ToolbarIcon.astro
+│   ├── WeatherWidget.astro
+│   ├── SearchForm.astro
+│   ├── FakeScrollbar.astro
+│   └── Taskbar.astro
+└── pages/
+    ├── index.astro
+    ├── projects.astro
+    ├── search.astro
+    └── api/
+        └── weather.ts    ← proxies api.weather.gov using config lat/lon
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Commands
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+| Command           | Action                                       |
+| :---------------- | :------------------------------------------- |
+| `npm install`     | Install dependencies                         |
+| `npm run dev`     | Local dev server at `localhost:4321`         |
+| `npm run build`   | Build production site to `./dist/`           |
+| `npm run preview` | Preview the production build locally         |
