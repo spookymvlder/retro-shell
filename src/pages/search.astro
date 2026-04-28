@@ -7,11 +7,174 @@ const query = Astro.url.searchParams.get("q") ?? "";
 <RetroShell title="Search">
     <h1>FindIt! Search</h1>
 
-    {query ? (
-            <p>Search results for: <strong>{query}</strong></p>
-    ) : (
-            <p>No search term entered.</p>
-    )}
+    <form method="GET" action="/search" class="search-page-form">
+        <label>
+            <span>Search this site:</span>
+            <input id="page-search-input" name="q" value={query} autofocus />
+        </label>
+        <button type="submit">FindIt!</button>
+    </form>
 
-    <p>Search logic can be wired up later.</p>
+    <div id="search-status" class="search-status" data-query={query}></div>
+    <ul id="search-results" class="search-results"></ul>
 </RetroShell>
+
+<script>
+    interface PagefindResultData {
+        url: string;
+        excerpt: string;
+        meta: { title?: string };
+    }
+    interface PagefindResult {
+        id: string;
+        data: () => Promise<PagefindResultData>;
+    }
+    interface Pagefind {
+        search: (query: string) => Promise<{ results: PagefindResult[] }>;
+        options: (opts: Record<string, unknown>) => Promise<void>;
+    }
+
+    const status = document.querySelector<HTMLElement>("#search-status");
+    const list = document.querySelector<HTMLUListElement>("#search-results");
+    const query = (status?.dataset.query ?? "").trim();
+
+    if (!query) {
+        if (status) status.textContent = "Enter a search term above.";
+    } else {
+        if (status) status.textContent = "Searching…";
+        runSearch(query);
+    }
+
+    async function runSearch(q: string) {
+        let pagefind: Pagefind;
+        try {
+            // Pagefind builds /pagefind/ at `npm run build`. In dev mode it
+            // doesn't exist yet — degrade gracefully.
+            // The variable + @vite-ignore prevents Vite from trying to resolve
+            // the path at build time (the file doesn't exist until pagefind runs).
+            const pagefindUrl = "/pagefind/pagefind.js";
+            pagefind = (await import(/* @vite-ignore */ pagefindUrl)) as Pagefind;
+        } catch {
+            if (status) {
+                status.textContent =
+                    "Search index not built. Run `npm run build` to generate it.";
+            }
+            return;
+        }
+
+        const search = await pagefind.search(q);
+
+        if (search.results.length === 0) {
+            if (status) status.textContent = `No results for "${q}".`;
+            return;
+        }
+
+        if (status) {
+            status.textContent = `${search.results.length} result${
+                search.results.length === 1 ? "" : "s"
+            } for "${q}":`;
+        }
+
+        // Resolve the first ~10 results in parallel for snippet/title data.
+        const datas = await Promise.all(
+            search.results.slice(0, 10).map((r) => r.data()),
+        );
+
+        if (!list) return;
+        list.innerHTML = "";
+        for (const d of datas) {
+            const li = document.createElement("li");
+            li.className = "search-result";
+
+            const title = document.createElement("a");
+            title.href = d.url;
+            title.className = "search-result-title";
+            title.textContent = d.meta.title ?? d.url;
+
+            const excerpt = document.createElement("p");
+            excerpt.className = "search-result-excerpt";
+            excerpt.innerHTML = d.excerpt;
+
+            li.appendChild(title);
+            li.appendChild(excerpt);
+            list.appendChild(li);
+        }
+    }
+</script>
+
+<style>
+    .search-page-form {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .search-page-form label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1;
+        max-width: 420px;
+        font-size: 16px;
+    }
+
+    .search-page-form input {
+        height: 32px;
+        padding: 4px 8px;
+        font: 16px Tahoma, sans-serif;
+        background: white;
+        border: 2px inset #d4d0c8;
+    }
+
+    .search-page-form button {
+        height: 36px;
+        padding: 0 16px;
+        font: 18px Tahoma, sans-serif;
+        background: #ece9d8;
+        border: 2px solid #fff;
+        border-right-color: #555;
+        border-bottom-color: #555;
+        cursor: pointer;
+    }
+
+    .search-status {
+        margin: 12px 0;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .search-results {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .search-result {
+        padding: 10px 14px;
+        background: #fffff0;
+        border: 1px solid #888;
+    }
+
+    .search-result-title {
+        font-size: 18px;
+        color: #0000ee;
+    }
+
+    .search-result-title:visited {
+        color: #551a8b;
+    }
+
+    .search-result-excerpt {
+        margin: 6px 0 0;
+        font-size: 16px;
+    }
+
+    .search-result-excerpt :global(mark) {
+        background: #ffff66;
+        color: inherit;
+    }
+</style>
