@@ -7,6 +7,8 @@
 </span>
 
 <script>
+    import { loadSettings } from "../lib/userSettings";
+
     interface WeatherResponse {
         temperature: number;
         unit: string;
@@ -27,7 +29,12 @@
         return isDaytime ? "sun" : "moon";
     }
 
-    fetch("/api/weather")
+    const settings = loadSettings();
+    const url = settings.zip
+        ? `/api/weather?zip=${encodeURIComponent(settings.zip)}`
+        : "/api/weather";
+
+    fetch(url)
         .then((res) => res.json() as Promise<WeatherResponse>)
         .then((data) => {
             if (weatherTemp) {

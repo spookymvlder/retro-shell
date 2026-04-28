@@ -1,9 +1,54 @@
 ---
+import { site } from "../site.config";
 ---
 
 <footer class="taskbar">
     <button id="start-button">Start</button>
+    {site.clock.enabled && (
+        <div
+            id="taskbar-clock"
+            class="clock"
+            data-default-tz={site.clock.defaultTimezone}
+            data-default-format={site.clock.defaultFormat}
+        >
+            --:--
+        </div>
+    )}
 </footer>
+
+<script>
+    import { loadSettings } from "../lib/userSettings";
+
+    const clock = document.querySelector<HTMLElement>("#taskbar-clock");
+    if (clock) {
+        const defaultTz = clock.dataset.defaultTz ?? "UTC";
+        const defaultFormat = (clock.dataset.defaultFormat ?? "12h") as "12h" | "24h";
+
+        function tick() {
+            const settings = loadSettings();
+            const tz = settings.timezone ?? defaultTz;
+            const format = settings.clockFormat ?? defaultFormat;
+            try {
+                clock!.textContent = new Intl.DateTimeFormat("en-US", {
+                    timeZone: tz,
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: format === "12h",
+                }).format(new Date());
+            } catch {
+                clock!.textContent = "??:??";
+            }
+        }
+
+        tick();
+        // Align the next tick to the top of the next minute, then every 60s after.
+        const msUntilNextMinute = 60000 - (Date.now() % 60000);
+        setTimeout(() => {
+            tick();
+            setInterval(tick, 60000);
+        }, msUntilNextMinute);
+    }
+</script>
 
 <style>
     .taskbar {
@@ -14,6 +59,7 @@
         height: 44px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 4px;
         background: #d4d0c8;
         border-top: 2px solid #fff;
@@ -29,5 +75,19 @@
         border-right-color: #111;
         border-bottom-color: #111;
         cursor: pointer;
+    }
+
+    .clock {
+        min-width: 90px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 14px;
+        font: 18px Tahoma, sans-serif;
+        background: #d4d0c8;
+        border: 2px inset #d4d0c8;
+        border-right-color: #fff;
+        border-bottom-color: #fff;
     }
 </style>
