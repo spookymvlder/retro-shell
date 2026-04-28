@@ -21,7 +21,7 @@ const { title = "Home" } = Astro.props as Props;
             <Toolbar />
 
             <div class="content-shell">
-                <article class="content">
+                <article class="content" data-pagefind-body>
                     <slot />
                 </article>
                 <FakeScrollbar />
