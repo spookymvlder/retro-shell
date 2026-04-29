@@ -13,7 +13,7 @@ const initialPath = path === "/" ? "" : path.replace(/^\//, "");
     <form id="url-form" class="address-form" data-site-name={site.siteName}>
         <label for="path-input">Address</label>
         <div class="address-box">
-            <span>{site.siteName}/</span>
+            <span>www.{site.siteName}/</span>
             <input
                 id="path-input"
                 value={initialPath}
