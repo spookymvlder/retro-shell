@@ -11,4 +11,15 @@ declare module "cloudflare:workers" {
         TURNSTILE_SECRET: string;
         IP_HASH_SALT: string;
     }
+
+    /** The bindings exposed to the running Worker. Astro 6 ships this at runtime
+     *  via `@astrojs/cloudflare`; the TS types don't include the export, so we
+     *  add it manually here. */
+    export const env: Env;
+}
+
+/** Cloudflare Workers exposes `caches.default` in addition to the standard
+ *  named-cache API. The DOM lib doesn't know about it. */
+interface CacheStorage {
+    default: Cache;
 }
