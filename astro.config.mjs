@@ -8,10 +8,9 @@ export default defineConfig({
     // URLs for Open Graph tags, canonical links, and the sitemap.
     site: "https://yoursite.com",
     output: "server",
-    adapter: cloudflare({
-        // Lets `astro dev` access D1 + secrets from wrangler.jsonc / .dev.vars locally.
-        platformProxy: { enabled: true },
-    }),
+    // The Cloudflare adapter (v13+) wires up local D1 + secrets automatically
+    // via @cloudflare/vite-plugin reading wrangler.jsonc and .dev.vars.
+    adapter: cloudflare(),
     integrations: [
         // Auto-generates /sitemap-index.xml + /sitemap-0.xml from prerendered routes.
         // SSR routes (search, guestbook, /api/*) are excluded automatically.
