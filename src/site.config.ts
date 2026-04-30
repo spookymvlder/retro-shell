@@ -101,12 +101,14 @@ export const site: SiteConfig = {
             { href: "https://github.com/YOUR_USERNAME", label: "GitHub", icon: "github", external: true },
             { href: "https://www.linkedin.com/in/YOUR_USERNAME", label: "LinkedIn", icon: "linkedin", external: true },
             { href: "/contact", label: "Contact", icon: "mail" },
+            { href: "https://apod.nasa.gov/apod/astropix.html", label: "NASA Pic of the Day", icon: "nasa", external: true },
         ],
         [
             { href: "/guestbook", label: "Guestbook", icon: "guestbook" },
             { href: "/about", label: "About", icon: "info" },
             { href: "/settings", label: "Settings", icon: "settings" },
             { href: "https://github.com/spookymvlder/retro-shell", label: "Get Retro Shell!", icon: "template" },
+            { href: "https://en.wikipedia.org/wiki/Special:Random", label: "Random Article", icon: "wikipedia", external: true },
         ],
     ],
 
@@ -146,7 +148,7 @@ export const site: SiteConfig = {
 
     darkMode: {
         enabled: true,
-        default: "auto",
+        default: "light",
     },
 
     ticker: {
