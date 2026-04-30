@@ -12,6 +12,7 @@
     title="Toggle dark mode"
 >
     <span class="sun-moon" aria-hidden="true"></span>
+    <span class="theme-toggle-label">Display Mode</span>
 </button>
 
 <script>
@@ -39,13 +40,18 @@
     .theme-toggle {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        width: 36px;
+        gap: 6px;
         height: 32px;
-        padding: 0;
+        padding: 2px 6px;
         background: transparent;
         border: 0;
         cursor: pointer;
+        font: 19px Tahoma, sans-serif;
+        color: #111;
+    }
+
+    .theme-toggle-label {
+        white-space: nowrap;
     }
 
     .theme-toggle:hover,

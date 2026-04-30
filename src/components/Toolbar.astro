@@ -25,7 +25,7 @@ import { site } from "../site.config";
             ))}
             {rowIndex === 0 && site.weather.enabled && <WeatherWidget />}
             {rowIndex === 0 && site.search.enabled && <SearchForm />}
-            {rowIndex === 0 && site.darkMode.enabled && <ThemeToggle />}
+            {rowIndex === 1 && site.darkMode.enabled && <ThemeToggle />}
         </div>
     ))}
     {site.ticker.enabled && <Ticker />}
