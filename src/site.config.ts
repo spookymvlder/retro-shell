@@ -105,7 +105,7 @@ export const site: SiteConfig = {
         [
             { href: "/guestbook", label: "Guestbook", icon: "guestbook" },
             { href: "/about", label: "About", icon: "info" },
-            { href: "/settings", label: "Settings", icon: "info" },
+            { href: "/settings", label: "Settings", icon: "settings" },
             { href: "https://github.com/spookymvlder/retro-shell", label: "Get Retro Shell!", icon: "template" },
         ],
     ],
