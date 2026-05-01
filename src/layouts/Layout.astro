@@ -117,6 +117,9 @@ const absoluteOgImage = Astro.site
         /* Used on yellow highlight backgrounds (h1, sticker hover) — stays
            dark in both themes for contrast against --page-highlight. */
         --page-text-on-highlight: #2a1a0a;
+        /* Surface color for "cards" — sidebar, sticker tiles, search/guestbook
+           result rows. Sits one step above --page-bg in tone. */
+        --page-card-bg: #ffffff;
     }
 
     [data-theme="dark"] {
@@ -128,6 +131,7 @@ const absoluteOgImage = Astro.site
         --page-accent-soft: #3d1828;
         --page-link: #7fb3ff;
         --page-link-visited: #c49bdc;
+        --page-card-bg: #2a2035;
     }
 
     body {
