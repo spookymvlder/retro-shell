@@ -13,3 +13,8 @@ IP_HASH_SALT="replace-me-with-a-long-random-string"
 # Steam Web API key. Get one (free) at https://steamcommunity.com/dev/apikey
 # Required only if site.config.ts has steam.enabled = true.
 STEAM_API_KEY=""
+
+# BoardGameGeek XML API v2 Bearer token. Register an application at
+# https://boardgamegeek.com/using_the_xml_api to get one.
+# Required only if site.config.ts has bgg.enabled = true.
+BGG_API_TOKEN=""
