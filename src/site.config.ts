@@ -91,6 +91,17 @@ export interface SiteConfig {
         /** Edge cache duration in seconds. */
         cacheSeconds: number;
     };
+    letterboxd: {
+        enabled: boolean;
+        /** Letterboxd username — anything in your /USERNAME/ profile URL. */
+        username: string;
+        /** How many recent watches to include in the rotation. */
+        count: number;
+        /** Seconds between auto-advance. Pauses on hover. */
+        rotateSeconds: number;
+        /** Edge cache duration in seconds. */
+        cacheSeconds: number;
+    };
     search: {
         enabled: boolean;
         /** Where the search form submits to, with ?q=... appended */
@@ -225,6 +236,14 @@ export const site: SiteConfig = {
         username: "YOUR_BGG_USERNAME",
         count: 5,
         fetchThumbnails: true,
+        cacheSeconds: 86400,
+    },
+
+    letterboxd: {
+        enabled: true,
+        username: "YOUR_LETTERBOXD_USERNAME",
+        count: 8,
+        rotateSeconds: 6,
         cacheSeconds: 86400,
     },
 

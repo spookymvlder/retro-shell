@@ -1,0 +1,184 @@
+---
+import { site } from "../site.config";
+---
+
+{site.letterboxd.enabled && (
+    <div
+        class="widget-box lb-widget"
+        data-rotate-seconds={site.letterboxd.rotateSeconds}
+    >
+        <h3 class="widget-heading">Recently Watched</h3>
+        <div class="lb-stage" id="lb-stage">
+            <p class="lb-empty">Loading…</p>
+        </div>
+    </div>
+)}
+
+<script>
+    interface Item {
+        title: string;
+        year: string;
+        stars: string;
+        rewatch: boolean;
+        link: string;
+        poster?: string;
+        dateLabel: string;
+    }
+    interface Response {
+        items: Item[];
+        error?: string;
+    }
+
+    const widget = document.querySelector<HTMLElement>(".lb-widget");
+    const stage = document.querySelector<HTMLElement>("#lb-stage");
+
+    if (widget && stage) {
+        const rotateMs = (Number(widget.dataset.rotateSeconds) || 6) * 1000;
+
+        function escapeHtml(s: string): string {
+            return s
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function render(items: Item[]) {
+            stage!.innerHTML = items
+                .map((item, i) => `
+                    <a class="lb-card${i === 0 ? " lb-card--active" : ""}"
+                       href="${escapeHtml(item.link)}"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        ${item.poster
+                            ? `<img class="lb-poster" src="${escapeHtml(item.poster)}" alt="" loading="lazy" />`
+                            : `<div class="lb-poster lb-poster--placeholder"></div>`}
+                        <div class="lb-info">
+                            <div class="lb-title">${escapeHtml(item.title)}${item.year ? ` <span class="lb-year">(${escapeHtml(item.year)})</span>` : ""}</div>
+                            ${item.stars ? `<div class="lb-stars">${item.stars}</div>` : ""}
+                            <div class="lb-date">${escapeHtml(item.dateLabel)}${item.rewatch ? " · rewatch" : ""}</div>
+                        </div>
+                    </a>
+                `)
+                .join("");
+        }
+
+        let paused = false;
+        widget.addEventListener("mouseenter", () => (paused = true));
+        widget.addEventListener("mouseleave", () => (paused = false));
+        widget.addEventListener("focusin", () => (paused = true));
+        widget.addEventListener("focusout", () => (paused = false));
+
+        fetch("/api/letterboxd")
+            .then((r) => r.json() as Promise<Response>)
+            .then((data) => {
+                if (!data.items?.length) {
+                    stage.innerHTML = `<p class="lb-empty">${
+                        data.error === "not-configured"
+                            ? "Letterboxd not configured."
+                            : "No recent watches."
+                    }</p>`;
+                    return;
+                }
+
+                render(data.items);
+                if (data.items.length < 2) return;
+
+                const cards = stage.querySelectorAll<HTMLElement>(".lb-card");
+                let current = 0;
+                setInterval(() => {
+                    if (paused) return;
+                    cards[current].classList.remove("lb-card--active");
+                    current = (current + 1) % cards.length;
+                    cards[current].classList.add("lb-card--active");
+                }, rotateMs);
+            })
+            .catch(() => {
+                stage.innerHTML = `<p class="lb-empty">Letterboxd unavailable.</p>`;
+            });
+    }
+</script>
+
+<style>
+    .widget-box {
+        padding: 10px 12px;
+        background: var(--page-card-bg);
+        border: 2px solid var(--page-text);
+        box-shadow: 4px 4px 0 var(--page-accent);
+    }
+
+    .widget-heading {
+        margin: 0 0 8px;
+        padding: 0 0 4px;
+        font-family: var(--page-heading-font);
+        font-size: 16px;
+        border-bottom: 2px solid var(--page-accent);
+    }
+
+    /* The stage holds all cards stacked; only one fades in at a time. */
+    .lb-stage {
+        position: relative;
+        min-height: 320px;
+    }
+
+    .lb-stage :global(.lb-card) {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        text-decoration: none;
+        color: var(--page-text);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+
+    .lb-stage :global(.lb-card--active) {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .lb-stage :global(.lb-poster) {
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        border: 1px solid var(--page-text);
+    }
+
+    .lb-stage :global(.lb-poster--placeholder) {
+        height: 220px;
+        background: var(--page-accent-soft);
+    }
+
+    .lb-stage :global(.lb-info) {
+        font-size: 13px;
+        line-height: 1.3;
+    }
+
+    .lb-stage :global(.lb-title) {
+        font-weight: bold;
+    }
+
+    .lb-stage :global(.lb-year) {
+        font-weight: normal;
+        color: var(--page-muted);
+    }
+
+    .lb-stage :global(.lb-stars) {
+        color: var(--page-accent);
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .lb-stage :global(.lb-date) {
+        color: var(--page-muted);
+        font-size: 12px;
+    }
+
+    .lb-empty {
+        margin: 0;
+        font-size: 13px;
+        color: var(--page-muted);
+    }
+</style>
