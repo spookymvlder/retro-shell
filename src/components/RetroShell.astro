@@ -554,7 +554,12 @@ urlForm?.addEventListener("submit", (event) => {
     .page-header { grid-area: header; }
     .page-nav { grid-area: nav; }
     .page-main { grid-area: main; min-width: 0; }
-    .page-widgets { grid-area: widgets; }
+    .page-widgets {
+        grid-area: widgets;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
     .page-footer { grid-area: footer; }
 
     /* Header banner — replaces the standalone h1 styling for layout pages.

@@ -10,6 +10,7 @@ declare module "cloudflare:workers" {
         PUBLIC_TURNSTILE_SITE_KEY: string;
         TURNSTILE_SECRET: string;
         IP_HASH_SALT: string;
+        STEAM_API_KEY: string;
     }
 
     /** The bindings exposed to the running Worker. Astro 6 ships this at runtime

@@ -1,0 +1,144 @@
+---
+import { site } from "../site.config";
+---
+
+{site.bgg.enabled && (
+    <div class="widget-box bgg-widget">
+        <h3 class="widget-heading">Recent Plays (BGG)</h3>
+        <ul class="bgg-list" id="bgg-list">
+            <li class="bgg-empty">Loading…</li>
+        </ul>
+    </div>
+)}
+
+<script>
+    interface Play {
+        gameId: number;
+        name: string;
+        date: string;
+        quantity: number;
+        thumbnail?: string;
+        bggUrl: string;
+    }
+    interface BggResponse {
+        plays: Play[];
+        error?: string;
+    }
+
+    function formatDate(iso: string): string {
+        if (!iso) return "";
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    }
+
+    const list = document.querySelector<HTMLElement>("#bgg-list");
+    if (list) {
+        fetch("/api/bgg")
+            .then((r) => r.json() as Promise<BggResponse>)
+            .then((data) => {
+                if (!data.plays?.length) {
+                    list.innerHTML = `<li class="bgg-empty">${
+                        data.error === "not-configured"
+                            ? "BGG not configured."
+                            : "No recent plays."
+                    }</li>`;
+                    return;
+                }
+                list.innerHTML = data.plays
+                    .map((p) => `
+                        <li class="bgg-row">
+                            <a href="${p.bggUrl}" target="_blank" rel="noopener noreferrer">
+                                ${p.thumbnail
+                                    ? `<img class="bgg-thumb" src="${p.thumbnail}" alt="" loading="lazy" />`
+                                    : `<span class="bgg-thumb bgg-thumb--placeholder"></span>`}
+                                <span class="bgg-meta">
+                                    <span class="bgg-name">${p.name}</span>
+                                    <span class="bgg-date">${formatDate(p.date)}</span>
+                                </span>
+                            </a>
+                        </li>
+                    `)
+                    .join("");
+            })
+            .catch(() => {
+                list.innerHTML = `<li class="bgg-empty">BGG unavailable.</li>`;
+            });
+    }
+</script>
+
+<style>
+    .widget-box {
+        padding: 10px 12px;
+        background: var(--page-card-bg);
+        border: 2px solid var(--page-text);
+        box-shadow: 4px 4px 0 var(--page-accent);
+    }
+
+    .widget-heading {
+        margin: 0 0 8px;
+        padding: 0 0 4px;
+        font-family: var(--page-heading-font);
+        font-size: 16px;
+        border-bottom: 2px solid var(--page-accent);
+    }
+
+    .bgg-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .bgg-list :global(a) {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: var(--page-text);
+    }
+
+    .bgg-list :global(a:hover) {
+        background: var(--page-highlight);
+        color: var(--page-text-on-highlight);
+    }
+
+    .bgg-list :global(.bgg-thumb) {
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        object-fit: cover;
+        border: 1px solid var(--page-text);
+    }
+
+    .bgg-list :global(.bgg-thumb--placeholder) {
+        background: var(--page-accent-soft);
+    }
+
+    .bgg-list :global(.bgg-meta) {
+        display: flex;
+        flex-direction: column;
+        font-size: 13px;
+        line-height: 1.2;
+        min-width: 0;
+    }
+
+    .bgg-list :global(.bgg-name) {
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .bgg-list :global(.bgg-date) {
+        color: var(--page-muted);
+        font-size: 12px;
+    }
+
+    .bgg-empty {
+        font-size: 13px;
+        color: var(--page-muted);
+    }
+</style>

@@ -71,6 +71,26 @@ export interface SiteConfig {
         /** Optional copy shown after the count, e.g. " since April 2026" */
         suffix: string;
     };
+    steam: {
+        enabled: boolean;
+        /** Numeric Steam ID (find at steamid.io). Profile must be public. */
+        steamId: string;
+        /** How many recently-played games to display. */
+        count: number;
+        /** Edge cache duration in seconds. */
+        cacheSeconds: number;
+    };
+    bgg: {
+        enabled: boolean;
+        /** BoardGameGeek username (case-sensitive). */
+        username: string;
+        /** How many recent plays to display. */
+        count: number;
+        /** Whether to fetch box-art thumbnails (one extra API call per batch). */
+        fetchThumbnails: boolean;
+        /** Edge cache duration in seconds. */
+        cacheSeconds: number;
+    };
     search: {
         enabled: boolean;
         /** Where the search form submits to, with ?q=... appended */
@@ -190,6 +210,22 @@ export const site: SiteConfig = {
         enabled: true,
         prefix: "You are visitor #",
         suffix: "",
+    },
+
+    steam: {
+        enabled: true,
+        // Find your numeric Steam ID at https://steamid.io. Profile must be public.
+        steamId: "YOUR_STEAM_ID",
+        count: 3,
+        cacheSeconds: 86400,
+    },
+
+    bgg: {
+        enabled: true,
+        username: "YOUR_BGG_USERNAME",
+        count: 5,
+        fetchThumbnails: true,
+        cacheSeconds: 86400,
     },
 
     search: {

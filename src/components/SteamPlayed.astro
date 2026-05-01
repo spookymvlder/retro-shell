@@ -1,0 +1,134 @@
+---
+import { site } from "../site.config";
+---
+
+{site.steam.enabled && (
+    <div class="widget-box steam-widget">
+        <h3 class="widget-heading">Recently Played (Steam)</h3>
+        <ul class="steam-list" id="steam-list">
+            <li class="steam-empty">Loading…</li>
+        </ul>
+    </div>
+)}
+
+<script>
+    interface Game {
+        appid: number;
+        name: string;
+        minutes2Weeks: number;
+        minutesForever: number;
+        capsuleUrl: string;
+        storeUrl: string;
+    }
+    interface SteamResponse {
+        games: Game[];
+        error?: string;
+    }
+
+    const list = document.querySelector<HTMLElement>("#steam-list");
+    if (list) {
+        fetch("/api/steam")
+            .then((r) => r.json() as Promise<SteamResponse>)
+            .then((data) => {
+                if (!data.games?.length) {
+                    list.innerHTML = `<li class="steam-empty">${
+                        data.error === "not-configured"
+                            ? "Steam not configured."
+                            : "No recent games."
+                    }</li>`;
+                    return;
+                }
+                list.innerHTML = data.games
+                    .map((g) => {
+                        const hours = (g.minutes2Weeks / 60).toFixed(1);
+                        return `
+                          <li class="steam-row">
+                            <a href="${g.storeUrl}" target="_blank" rel="noopener noreferrer">
+                              <img class="steam-capsule" src="${g.capsuleUrl}" alt="" loading="lazy" />
+                              <span class="steam-meta">
+                                <span class="steam-name">${g.name}</span>
+                                <span class="steam-time">${hours}h past 2 weeks</span>
+                              </span>
+                            </a>
+                          </li>
+                        `;
+                    })
+                    .join("");
+            })
+            .catch(() => {
+                list.innerHTML = `<li class="steam-empty">Steam unavailable.</li>`;
+            });
+    }
+</script>
+
+<style>
+    .widget-box {
+        padding: 10px 12px;
+        background: var(--page-card-bg);
+        border: 2px solid var(--page-text);
+        box-shadow: 4px 4px 0 var(--page-accent);
+    }
+
+    .widget-heading {
+        margin: 0 0 8px;
+        padding: 0 0 4px;
+        font-family: var(--page-heading-font);
+        font-size: 16px;
+        border-bottom: 2px solid var(--page-accent);
+    }
+
+    .steam-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .steam-list :global(a) {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: var(--page-text);
+    }
+
+    .steam-list :global(a:hover) {
+        background: var(--page-highlight);
+        color: var(--page-text-on-highlight);
+    }
+
+    .steam-list :global(.steam-capsule) {
+        width: 92px;
+        height: 35px;
+        flex: 0 0 92px;
+        object-fit: cover;
+        border: 1px solid var(--page-text);
+    }
+
+    .steam-list :global(.steam-meta) {
+        display: flex;
+        flex-direction: column;
+        font-size: 13px;
+        line-height: 1.2;
+        min-width: 0;
+    }
+
+    .steam-list :global(.steam-name) {
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .steam-list :global(.steam-time) {
+        color: var(--page-muted);
+        font-size: 12px;
+    }
+
+    .steam-empty {
+        font-size: 13px;
+        color: var(--page-muted);
+    }
+</style>
