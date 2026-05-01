@@ -145,6 +145,17 @@ The values in `.dev.vars.example` are Cloudflare's
 [testing keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/)
 that always pass — useful for local dev without setting up a real widget.
 
+## Game Widget Setup
+Disable either via enabled: false in config.
+### Steam
+1. Get an API key at steamcommunity.com/dev/apikey.
+2. Npx wrangler secret put STEAM_API_KEY for prod, paste into .dev.vars for local.
+3. Find your numeric ID at steamid.io and set steam.steamId in site.config.ts. Profile must be public.
+
+### BGG
+1. Set bgg.username to your BGG username (case-sensitive).
+
+
 ## Deployment
 
 ```sh
