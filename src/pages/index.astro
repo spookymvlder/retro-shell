@@ -138,7 +138,9 @@ const news: NewsItem[] = [
         text-align: center;
     }
 
-    @media (max-width: 800px) {
+    /* Between mobile (890) and full desktop (1127), the main column is too
+       narrow for two cards next to each other — go single-column. */
+    @media (max-width: 1127px) {
         .directory {
             grid-template-columns: 1fr;
             gap: 14px;

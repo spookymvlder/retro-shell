@@ -11,7 +11,10 @@ export const prerender = true;
     searchKeywords="weather forecast temperature zip code time zone clock 12-hour 24-hour preferences"
 >
     <div class="settings-dialog">
-        <div class="dialog-titlebar">System Settings</div>
+        <div class="dialog-titlebar">
+            <span class="dialog-titlebar-text">System Settings</span>
+            <a href="/" class="dialog-close" aria-label="Close (return home)">X</a>
+        </div>
 
         <form id="settings-form" class="dialog-body">
             <div class="tab-strip" role="tablist">
@@ -172,10 +175,45 @@ export const prerender = true;
     }
 
     .dialog-titlebar {
-        padding: 4px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 3px 4px 3px 8px;
         font: bold 13px Tahoma, sans-serif;
         color: #ffffff;
         background: linear-gradient(90deg, #000080, #1084d0);
+    }
+
+    .dialog-titlebar-text {
+        flex: 1;
+    }
+
+    .dialog-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 20px;
+        font: bold 13px Arial, sans-serif;
+        line-height: 1;
+        color: #000;
+        text-decoration: none;
+        background: #c0c0c0;
+        border: 1px solid #000000;
+        box-shadow:
+            inset 1px 1px 0 #ffffff,
+            inset -1px -1px 0 #404040;
+    }
+
+    .dialog-close:active {
+        box-shadow:
+            inset 1px 1px 0 #404040,
+            inset -1px -1px 0 #ffffff;
+    }
+
+    .dialog-close:focus-visible {
+        outline: 1px dotted #fff;
+        outline-offset: -4px;
     }
 
     .dialog-body {

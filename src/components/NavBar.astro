@@ -37,7 +37,7 @@ const initialPath = path === "/" ? "" : path.replace(/^\//, "");
     }
 
     /* Hide the address-bar nav row on mobile — the real browser already has one. */
-    @media (max-width: 800px) {
+    @media (max-width: 890px) {
         .nav-row {
             display: none;
         }
@@ -115,9 +115,11 @@ const initialPath = path === "/" ? "" : path.replace(/^\//, "");
     }
 
     .go-button {
+        flex: 0 0 auto;
         height: 34px;
         padding: 0 12px;
         font: 18px Tahoma, sans-serif;
+        white-space: nowrap;
         background: #ece9d8;
         border: 2px solid #fff;
         border-right-color: #555;
