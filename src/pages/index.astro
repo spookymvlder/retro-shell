@@ -1,6 +1,8 @@
 ---
 import RetroShell from "../components/RetroShell.astro";
 import HitCounter from "../components/HitCounter.astro";
+import SteamPlayed from "../components/SteamPlayed.astro";
+import BggPlayed from "../components/BggPlayed.astro";
 
 export const prerender = true;
 
@@ -71,18 +73,23 @@ const news: NewsItem[] = [
         guestbook and Turnstile spam protection.
     </p>
 
-    <div slot="widgets" class="news">
-        <span class="news-badge">NEW!</span>
-        <h3 class="news-heading">What's New</h3>
-        <ul class="news-list">
-            {news.map((item) => (
-                <li>
-                    <span class="news-date">{item.date}</span>
-                    <span class="news-text">{item.text}</span>
-                </li>
-            ))}
-        </ul>
-    </div>
+    <Fragment slot="widgets">
+        <div class="news">
+            <span class="news-badge">NEW!</span>
+            <h3 class="news-heading">What's New</h3>
+            <ul class="news-list">
+                {news.map((item) => (
+                    <li>
+                        <span class="news-date">{item.date}</span>
+                        <span class="news-text">{item.text}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+
+        <SteamPlayed />
+        <BggPlayed />
+    </Fragment>
 
     <Fragment slot="footer">
         <HitCounter />
@@ -131,7 +138,9 @@ const news: NewsItem[] = [
         text-align: center;
     }
 
-    @media (max-width: 800px) {
+    /* Between mobile (890) and full desktop (1127), the main column is too
+       narrow for two cards next to each other — go single-column. */
+    @media (max-width: 1127px) {
         .directory {
             grid-template-columns: 1fr;
             gap: 14px;

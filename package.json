@@ -15,6 +15,7 @@
     "@astrojs/cloudflare": "^13.2.1",
     "@astrojs/sitemap": "^3.7.2",
     "astro": "^6.1.9",
+    "fast-xml-parser": "^5.7.2",
     "typescript": "^5.9.3"
   },
   "devDependencies": {

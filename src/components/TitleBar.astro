@@ -42,4 +42,12 @@ const { title } = Astro.props as Props;
         outline: 2px dotted #fff;
         outline-offset: -5px;
     }
+
+    /* No taskbar on mobile to reopen with — hide the close button so users
+       can't strand themselves. */
+    @media (max-width: 890px) {
+        .window-close {
+            display: none;
+        }
+    }
 </style>
