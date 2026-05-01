@@ -91,6 +91,10 @@ function formatDate(unix: number): string {
         gap: 12px;
         max-width: 560px;
         padding: 14px;
+        /* Beige Win98 panel — stays beige in both themes since it's chrome,
+           not page content. Force dark text so labels stay readable when the
+           page theme flips. */
+        color: #111;
         background: #ece9d8;
         border: 2px solid #fff;
         border-right-color: #555;
