@@ -271,7 +271,7 @@ urlForm?.addEventListener("submit", (event) => {
        page composes .sticker into a grid; the Theme & Style Guide page
        demonstrates them standalone. Style overrides per page are still fine. */
 
-    /* Sticker — chunky white card with magenta drop shadow. */
+    /* Sticker — chunky card with magenta drop shadow. Surface follows theme. */
     .content :global(.sticker) {
         display: grid;
         grid-template-columns: 56px 1fr;
@@ -280,7 +280,7 @@ urlForm?.addEventListener("submit", (event) => {
         row-gap: 4px;
         align-items: center;
         padding: 14px 18px;
-        background: #ffffff;
+        background: var(--page-card-bg);
         color: var(--page-text);
         text-decoration: none;
         border: 3px solid var(--page-text);
