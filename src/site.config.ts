@@ -45,6 +45,13 @@ export interface SiteConfig {
     settings: {
         enabled: boolean;
     };
+    sidebarNav: {
+        enabled: boolean;
+        /** Optional heading shown above the sidebar links. */
+        heading?: string;
+        /** Internal-only links (no external). Each becomes a row in the sidebar. */
+        links: { href: string; label: string }[];
+    };
     darkMode: {
         enabled: boolean;
         /** "light", "dark", or "auto" (follow system preference). User toggle overrides. */
@@ -144,6 +151,19 @@ export const site: SiteConfig = {
 
     settings: {
         enabled: true,
+    },
+
+    sidebarNav: {
+        enabled: true,
+        heading: "Navigation",
+        links: [
+            { href: "/", label: "Home" },
+            { href: "/projects", label: "Projects" },
+            { href: "/guestbook", label: "Guestbook" },
+            { href: "/about", label: "About" },
+            { href: "/contact", label: "Contact" },
+            { href: "/settings", label: "Settings" },
+        ],
     },
 
     darkMode: {

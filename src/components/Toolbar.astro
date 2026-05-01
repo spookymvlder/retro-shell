@@ -11,25 +11,48 @@ import { site } from "../site.config";
 // the bottom.
 ---
 
-<div class="toolbar-clutter">
-    {site.toolbarRows.map((row, rowIndex) => (
-        <div class="toolbar-row">
-            {row.map((link) => (
-                <ToolbarButton
-                    href={link.href}
-                    label={link.label}
-                    icon={link.icon}
-                    iconSize={link.iconSize}
-                    external={link.external}
-                />
-            ))}
-            {rowIndex === 0 && site.weather.enabled && <WeatherWidget />}
-            {rowIndex === 0 && site.search.enabled && <SearchForm />}
-            {rowIndex === 1 && site.darkMode.enabled && <ThemeToggle />}
-        </div>
-    ))}
-    {site.ticker.enabled && <Ticker />}
+<div class="toolbar-clutter" id="toolbar-clutter">
+    <button
+        type="button"
+        id="toolbar-toggle"
+        class="toolbar-toggle"
+        aria-expanded="false"
+        aria-controls="toolbar-clutter-rows"
+    >
+        ▼ Show toolbars
+    </button>
+
+    <div class="toolbar-clutter-rows" id="toolbar-clutter-rows">
+        {site.toolbarRows.map((row, rowIndex) => (
+            <div class="toolbar-row">
+                {row.map((link) => (
+                    <ToolbarButton
+                        href={link.href}
+                        label={link.label}
+                        icon={link.icon}
+                        iconSize={link.iconSize}
+                        external={link.external}
+                    />
+                ))}
+                {rowIndex === 0 && site.weather.enabled && <WeatherWidget />}
+                {rowIndex === 0 && site.search.enabled && <SearchForm />}
+                {rowIndex === 1 && site.darkMode.enabled && <ThemeToggle />}
+            </div>
+        ))}
+        {site.ticker.enabled && <Ticker />}
+    </div>
 </div>
+
+<script>
+    const toggle = document.querySelector<HTMLButtonElement>("#toolbar-toggle");
+    const rows = document.querySelector<HTMLElement>("#toolbar-clutter-rows");
+    toggle?.addEventListener("click", () => {
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", expanded ? "false" : "true");
+        toggle.textContent = expanded ? "▼ Show toolbars" : "▲ Hide toolbars";
+        rows?.classList.toggle("is-open", !expanded);
+    });
+</script>
 
 <style>
     .toolbar-clutter {
@@ -46,5 +69,32 @@ import { site } from "../site.config";
         padding: 5px 8px;
         border-top: 1px solid #fff;
         border-bottom: 1px solid #b5b5b5;
+    }
+
+    /* Toggle is hidden on desktop — toolbar always shown. */
+    .toolbar-toggle {
+        display: none;
+    }
+
+    @media (max-width: 800px) {
+        .toolbar-toggle {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            font: 14px Tahoma, sans-serif;
+            text-align: left;
+            background: #ece9d8;
+            border: 0;
+            border-bottom: 1px solid #888;
+            cursor: pointer;
+        }
+
+        .toolbar-clutter-rows {
+            display: none;
+        }
+
+        .toolbar-clutter-rows.is-open {
+            display: block;
+        }
     }
 </style>

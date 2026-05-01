@@ -36,6 +36,13 @@ const initialPath = path === "/" ? "" : path.replace(/^\//, "");
         border-bottom: 1px solid #9a9a9a;
     }
 
+    /* Hide the address-bar nav row on mobile — the real browser already has one. */
+    @media (max-width: 800px) {
+        .nav-row {
+            display: none;
+        }
+    }
+
     .nav-button {
         width: 38px;
         height: 38px;

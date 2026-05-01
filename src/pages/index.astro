@@ -32,14 +32,13 @@ const news: NewsItem[] = [
 
 <RetroShell
     title="Home"
+    headerLabel="Welcome!"
     searchKeywords="welcome home main directory weather clock guestbook projects contact about template news updates"
 >
-    <h1>Welcome!</h1>
-
     <p class="lede">
         Hi — this is a personal corner of the web, dressed up like it's 1999.
         The browser around the page is fake. The content is real.
-        Poke around using the directory below or the toolbar above.
+        Poke around using the sidebar to the left or the toolbar above.
     </p>
 
     <h2>Directory</h2>
@@ -61,19 +60,6 @@ const news: NewsItem[] = [
         ))}
     </ul>
 
-    <div class="news">
-        <span class="news-badge">NEW!</span>
-        <h2 class="news-heading">What's New</h2>
-        <ul class="news-list">
-            {news.map((item) => (
-                <li>
-                    <span class="news-date">{item.date}</span>
-                    <span class="news-text">{item.text}</span>
-                </li>
-            ))}
-        </ul>
-    </div>
-
     <h2>Make it your own</h2>
 
     <p>
@@ -85,9 +71,27 @@ const news: NewsItem[] = [
         guestbook and Turnstile spam protection.
     </p>
 
-    <HitCounter />
+    <div slot="widgets" class="news">
+        <span class="news-badge">NEW!</span>
+        <h3 class="news-heading">What's New</h3>
+        <ul class="news-list">
+            {news.map((item) => (
+                <li>
+                    <span class="news-date">{item.date}</span>
+                    <span class="news-text">{item.text}</span>
+                </li>
+            ))}
+        </ul>
+    </div>
 
-
+    <Fragment slot="footer">
+        <HitCounter />
+        <p class="footer-line">
+            ✦ Best viewed in Internet Explorer 5 ✦
+            Hand-coded with love ✦
+            Powered by <a href="https://github.com/spookymvlder/retro-shell">Retro Shell</a> ✦
+        </p>
+    </Fragment>
 </RetroShell>
 
 <style>
@@ -96,16 +100,13 @@ const news: NewsItem[] = [
         max-width: 60ch;
     }
 
-    /* Directory grid is layout-specific to the home page.
-       The .sticker visual is defined globally in RetroShell.astro. */
     .directory {
         list-style: none;
         padding: 0;
         margin: 8px 0 36px;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 26px 22px;
-        max-width: 720px;
+        gap: 22px 18px;
     }
 
     .directory li:nth-child(odd) :global(.sticker) {
@@ -116,8 +117,7 @@ const news: NewsItem[] = [
     }
 
     .news {
-        max-width: 540px;
-        margin: 36px 0;
+        margin: 0 0 14px;
     }
 
     .news-heading {
@@ -125,11 +125,16 @@ const news: NewsItem[] = [
     }
 
     .footer-line {
-        margin-top: 48px;
-        padding-top: 16px;
-        border-top: 2px dashed var(--page-accent);
+        margin: 12px 0 0;
         font-size: 14px;
         color: var(--page-muted);
         text-align: center;
+    }
+
+    @media (max-width: 800px) {
+        .directory {
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
     }
 </style>
