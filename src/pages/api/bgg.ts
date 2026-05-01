@@ -1,4 +1,5 @@
 import type { APIContext } from "astro";
+import { env } from "cloudflare:workers";
 import { XMLParser } from "fast-xml-parser";
 import { site } from "../../site.config";
 
@@ -17,10 +18,18 @@ const parser = new XMLParser({
     isArray: (name) => ["play", "item"].includes(name),
 });
 
-/** BGG returns 202 (queued) on cold cache. Retry once after a short wait. */
+/** BGG returns 202 (queued) on cold cache. Retry once after a short wait.
+ *  As of 2026 BGG requires a Bearer token — register at
+ *  https://boardgamegeek.com/using_the_xml_api to obtain one. */
 async function fetchBgg(url: string): Promise<Response | null> {
+    const token = env.BGG_API_TOKEN;
+    if (!token) return null;
+    const headers: Record<string, string> = {
+        Accept: "application/xml",
+        Authorization: `Bearer ${token}`,
+    };
     for (let attempt = 0; attempt < 2; attempt++) {
-        const res = await fetch(url, { headers: { Accept: "application/xml" } });
+        const res = await fetch(url, { headers });
         if (res.status === 200) return res;
         if (res.status === 202 && attempt === 0) {
             await new Promise((r) => setTimeout(r, 1500));
@@ -105,7 +114,11 @@ async function attachThumbnails(plays: OutputPlay[]): Promise<void> {
 
 export async function GET(_context: APIContext) {
     if (!site.bgg.enabled) return Response.json({ plays: [] });
-    if (!site.bgg.username || site.bgg.username === "YOUR_BGG_USERNAME") {
+    if (
+        !site.bgg.username ||
+        site.bgg.username === "YOUR_BGG_USERNAME" ||
+        !env.BGG_API_TOKEN
+    ) {
         return Response.json({ plays: [], error: "not-configured" });
     }
 
