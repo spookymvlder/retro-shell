@@ -13,7 +13,10 @@
     const closeBtn = document.querySelector<HTMLButtonElement>("#lightbox-close");
 
     if (dialog && lbImg) {
-        // Any image with class="expandable" anywhere on the page becomes clickable.
+        // Delegated click — any image with class="expandable" anywhere on
+        // the page opens the lightbox. composedPath() works through shadow
+        // DOM boundaries; for plain markup it's equivalent to checking
+        // e.target directly.
         document.addEventListener("click", (e) => {
             const path = e.composedPath();
             const img = path.find(
