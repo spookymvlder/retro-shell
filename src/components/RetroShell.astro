@@ -55,7 +55,11 @@ const footerSlot = Astro.slots.has("footer");
                     {useLayout ? (
                         <div class:list={["page-layout", { "page-layout--with-widgets": widgetsSlot }]}>
                             <header class="page-header">
-                                <h1 class="page-header-title">{headerLabel ?? title}</h1>
+                                {Astro.slots.has("header") ? (
+                                        <slot name="header" />
+                                ) : (
+                                        <h1 class="page-header-title">{headerLabel ?? title}</h1>
+                                )}
                             </header>
 
                             <aside class="page-nav">

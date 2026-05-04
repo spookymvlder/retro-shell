@@ -5,21 +5,23 @@ const query = Astro.url.searchParams.get("q") ?? "";
 ---
 
 <RetroShell title="Search">
-    <h1 class="search-heading">
-        <img src="/icons/search-toolbar.png" alt="" class="search-logo" />
+    <h1 slot="header" class="page-header-title search-heading">
+        <img src="/icons/search.png" alt="" class="search-logo" />
         FindIt! Search
     </h1>
 
-    <form method="GET" action="/search" class="search-page-form">
-        <label>
-            <span>Search this site:</span>
-            <input id="page-search-input" name="q" value={query} autofocus />
-        </label>
-        <button type="submit">FindIt!</button>
-    </form>
+    <div class="card">
+        <form method="GET" action="/search" class="search-page-form">
+            <label>
+                <span>Search this site:</span>
+                <input id="page-search-input" name="q" value={query} autofocus />
+            </label>
+            <button type="submit">FindIt!</button>
+        </form>
 
-    <div id="search-status" class="search-status" data-query={query}></div>
-    <ul id="search-results" class="search-results"></ul>
+        <div id="search-status" class="search-status" data-query={query}></div>
+        <ul id="search-results" class="search-results"></ul>
+    </div>
 </RetroShell>
 
 <script>
