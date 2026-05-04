@@ -5,6 +5,7 @@ import NavBar from "./NavBar.astro";
 import Toolbar from "./Toolbar.astro";
 import Taskbar from "./Taskbar.astro";
 import Sidebar from "./Sidebar.astro";
+import Lightbox from "./Lightbox.astro";
 
 interface Props {
     title?: string;
@@ -89,6 +90,7 @@ const footerSlot = Astro.slots.has("footer");
         </section>
 
         <Taskbar />
+        <Lightbox />
     </main>
 </Layout>
 

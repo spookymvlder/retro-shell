@@ -1,0 +1,89 @@
+---
+// One <dialog> shared by every page. Any <img class="expandable"> opens here.
+---
+
+<dialog id="lightbox" class="lightbox" aria-label="Image preview">
+    <button id="lightbox-close" class="lightbox-close" aria-label="Close">×</button>
+    <img id="lightbox-image" src="" alt="" />
+</dialog>
+
+<script>
+    const dialog = document.querySelector<HTMLDialogElement>("#lightbox");
+    const lbImg = document.querySelector<HTMLImageElement>("#lightbox-image");
+    const closeBtn = document.querySelector<HTMLButtonElement>("#lightbox-close");
+
+    if (dialog && lbImg) {
+        // Delegated click — any image with class="expandable" anywhere on the
+        // page opens the lightbox. Also catch clicks on a wrapping <a> so the
+        // link doesn't navigate away.
+        document.addEventListener("click", (e) => {
+            const path = e.composedPath();
+            const img = path.find(
+                (n): n is HTMLImageElement =>
+                    n instanceof HTMLImageElement && n.classList.contains("expandable"),
+            );
+            if (!img) return;
+            e.preventDefault();
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
+            dialog.showModal();
+        });
+
+        closeBtn?.addEventListener("click", () => dialog.close());
+
+        // Click on the backdrop (outside the image) closes.
+        dialog.addEventListener("click", (e) => {
+            if (e.target === dialog) dialog.close();
+        });
+    }
+</script>
+
+<style>
+    .lightbox {
+        max-width: 90vw;
+        max-height: 90vh;
+        padding: 0;
+        background: var(--page-card-bg);
+        color: var(--page-text);
+        border: 3px solid var(--page-text);
+        box-shadow: 8px 8px 0 var(--page-accent);
+    }
+
+    .lightbox::backdrop {
+        background: rgba(0, 0, 0, 0.7);
+    }
+
+    .lightbox img {
+        display: block;
+        max-width: 100%;
+        max-height: 86vh;
+        object-fit: contain;
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        font: bold 20px Arial, sans-serif;
+        line-height: 1;
+        color: var(--page-text);
+        background: var(--page-card-bg);
+        border: 2px solid var(--page-text);
+        cursor: pointer;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-close:focus-visible {
+        background: var(--page-highlight);
+        color: var(--page-text-on-highlight);
+        outline: 2px solid var(--page-accent);
+        outline-offset: 0;
+    }
+
+    :global(img.expandable) {
+        cursor: zoom-in;
+    }
+</style>
