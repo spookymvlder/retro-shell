@@ -37,43 +37,49 @@ const news: NewsItem[] = [
     headerLabel="Welcome!"
     searchKeywords="welcome home main directory weather clock guestbook projects contact about template news updates"
 >
-    <p class="lede">
-        Hi — this is a personal corner of the web, dressed up like it's 1999.
-        The browser around the page is fake. The content is real.
-        Poke around using the sidebar to the left or the toolbar above.
-    </p>
+    <div class="card">
+        <p class="lede">
+            Hi — this is a personal corner of the web, dressed up like it's 1999.
+            The browser around the page is fake. The content is real.
+            Poke around using the sidebar to the left or the toolbar above.
+        </p>
 
-    <h2>Directory</h2>
+        <h2>Directory</h2>
 
-    <ul class="directory">
-        {directory.map((entry) => (
-            <li>
-                <a class="sticker" href={entry.href}>
-                    <img
-                        class="sticker-icon"
-                        src={`/icons/${entry.icon}.png`}
-                        alt=""
-                        loading="lazy"
-                    />
-                    <span class="sticker-label">{entry.label}</span>
-                    <span class="sticker-blurb">{entry.blurb}</span>
-                </a>
-            </li>
-        ))}
-    </ul>
+        <ul class="directory">
+            {directory.map((entry) => (
+                    <li>
+                        <a class="sticker" href={entry.href}>
+                            <img
+                                    class="sticker-icon"
+                                    src={`/icons/${entry.icon}.png`}
+                                    alt=""
+                                    loading="lazy"
+                            />
+                            <span class="sticker-label">{entry.label}</span>
+                            <span class="sticker-blurb">{entry.blurb}</span>
+                        </a>
+                    </li>
+            ))}
+        </ul>
 
-    <h2>Make it your own</h2>
+        <h2>Make it your own</h2>
 
-    <p>
-        This is a template. Edit <code>src/site.config.ts</code> for the site
-        name, toolbar links, default time zone, and weather location. Drop new
-        pages into <code>src/pages/</code> and wrap them in
-        <code>&lt;RetroShell&gt;</code>. The <a href="https://github.com/spookymvlder/retro-shell">README</a>
-        has the full setup walkthrough including the optional Cloudflare D1
-        guestbook and Turnstile spam protection.
-    </p>
+        <p>
+            This is a template. Edit <code>src/site.config.ts</code> for the site
+            name, toolbar links, default time zone, and weather location. Drop new
+            pages into <code>src/pages/</code> and wrap them in
+            <code>&lt;RetroShell&gt;</code>. The <a href="https://github.com/spookymvlder/retro-shell">README</a>
+            has the full setup walkthrough including the optional Cloudflare D1
+            guestbook and Turnstile spam protection.
+        </p>
+    </div>
+
 
     <Fragment slot="widgets">
+        <SteamPlayed />
+        <BggPlayed />
+        <LetterboxdWatched />
         <div class="news">
             <span class="news-badge">NEW!</span>
             <h3 class="news-heading">What's New</h3>
@@ -86,10 +92,6 @@ const news: NewsItem[] = [
                 ))}
             </ul>
         </div>
-
-        <SteamPlayed />
-        <BggPlayed />
-        <LetterboxdWatched />
     </Fragment>
 
     <Fragment slot="footer">

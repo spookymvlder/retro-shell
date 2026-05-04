@@ -2,9 +2,112 @@
 import RetroShell from "../components/RetroShell.astro";
 
 export const prerender = true;
+type Block =
+    | {type: "p"; text: string}
+    | {type: "ul"; items: string[] };
+
+interface Project {
+    title: string;
+    href: string;
+    image?: string;
+    imageAlt?: string;
+    blocks: Block[];
+}
+
+const projects: Project[] = [
+    {
+        title: "Example 1",
+        href: "https:yourlinkhere@exampleurl.fake",
+        image: "/pictures/projects/example1.png",
+        imageAlt: "Screenshot of project 1",
+        blocks: [
+            { type: "p", text: "Add text about your project."},
+            { type: "p", text: "Add more lines here, so that line breaks render."},
+            { type: "ul", items: ["Example language", "Example module 1", "Example module 2"]},
+        ],
+    },
+    {
+        title: "Retro Shell",
+        href: "https://github.com/spookymvlder/retro-shell",
+        image: "/pictures/projects/retro_shell.png",
+        imageAlt: "Retro Shell screenshot",
+        blocks: [
+            { type: "p", text: "You're looking at it!"},
+        ],
+    },
+
+];
 ---
 
-<RetroShell title="Projects">
-    <h1>Projects</h1>
-    <p>Put your projects here.</p>
+<RetroShell
+        title="Projects"
+        description="Things I've made."
+        searchKeywords="projects portfolio code work software"
+>
+    <ul class="project-list">
+        {projects.map((p) => (
+                <li class="card project-card">
+                    {p.image && (
+                            <img class="project-image expandable" src={p.image} alt={p.imageAlt ?? ""} loading="lazy" />
+                    )}
+                    <h2 class="project-title">{p.title}</h2>
+                    {p.blocks.map((b) =>
+                        b.type === "p"
+                            ? <p class="project-desc">{b.text}</p>
+                            : <ul class="project-bullets">
+                                {b.items.map((item) => <li>{item}</li>)}
+                                </ul>
+                    )}
+                    <p class="project-link">
+                        <a href={p.href} target="_blank" rel="noopener noreferrer">
+                            View on GitHub →
+                        </a>
+                    </p>
+                </li>
+        ))}
+    </ul>
 </RetroShell>
+
+<style>
+    .project-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .project-card {
+        margin: 0;
+    }
+
+    .project-image {
+        display: block;
+        width: 100%;
+        max-height: 220px;
+        object-fit: cover;
+        margin: 0 0 12px;
+        border: 2px solid var(--page-text);
+    }
+
+    .project-title {
+        margin: 0 0 8px;
+    }
+
+    .project-desc {
+        margin: 0 0 12px;
+    }
+
+    .project-link {
+        margin: 0;
+    }
+
+    .project-bullets {
+        margin: 0 0 12px;
+        padding-left: 22px;
+    }
+    .project-bullets li {
+        margin: 2px 0;
+    }
+</style>

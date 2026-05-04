@@ -9,27 +9,30 @@ export const prerender = true;
     description="A bit about who runs this site."
     searchKeywords="about bio profile who introduction"
 >
-    <h1>About</h1>
+    <div class="card">
+        <p class="lede">
+            Replace this page with a brief introduction to yourself or your project.
+        </p>
+        <img class="card-image" src="/pictures/about/self_portrait.png" alt="Me on a beautiful day" />
+        <h2>Who am I</h2>
 
-    <p class="lede">
-        Replace this page with a brief introduction to yourself or your project.
-    </p>
+        <p>
+            Edit <code>src/pages/about.astro</code> to add your own content here.
+            A few photos, a paragraph about what you do, links to other places
+            you exist on the web — whatever you'd want a stranger to know.
+        </p>
 
-    <h2>Who am I</h2>
+        <h2>What this site is</h2>
 
-    <p>
-        Edit <code>src/pages/about.astro</code> to add your own content here.
-        A few photos, a paragraph about what you do, links to other places
-        you exist on the web — whatever you'd want a stranger to know.
-    </p>
+        <p>
+            Built with <a href="https://github.com/spookymvlder/retro-shell">Retro Shell</a>,
+            a personal-website template that wraps your content in a fake late-90s
+            browser. The chrome around this page is fake. The page itself is real.
+        </p>
+    </div>
 
-    <h2>What this site is</h2>
 
-    <p>
-        Built with <a href="https://github.com/spookymvlder/retro-shell">Retro Shell</a>,
-        a personal-website template that wraps your content in a fake late-90s
-        browser. The chrome around this page is fake. The page itself is real.
-    </p>
+
 </RetroShell>
 
 <style>

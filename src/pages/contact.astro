@@ -2,6 +2,20 @@
 import RetroShell from "../components/RetroShell.astro";
 
 export const prerender = true;
+
+interface ContactLink {
+    href: string;
+    label: string;
+    icon: string;
+    blurb: string;
+    external: boolean,
+}
+
+const contact: ContactLink[] = [
+    { href: "mailto:you@example.com", external: true, label: "Email", icon: "mail", blurb: "you@example.com" },
+    { href: "https://github.com/YOUR_USERNAME", external: true, label: "GitHub", icon: "github", blurb: "@YOUR_USERNAME" },
+    { href: "/guestbook", external: false, label: "Guestbook", icon: "guestbook", blurb: "Sign in!" },
+];
 ---
 
 <RetroShell
@@ -9,30 +23,34 @@ export const prerender = true;
     description="Ways to get in touch."
     searchKeywords="contact email reach social mailto"
 >
-    <h1>Contact</h1>
+    <div class="card">
+        <p class="lede">
+            Replace this page with your real contact info.
+        </p>
 
-    <p class="lede">
-        Replace this page with your real contact info.
-    </p>
+        <ul class="contact">
+            {contact.map((entry) => (
+                    <li>
+                        <a class="sticker" href={entry.href}>
+                            <img
+                                    class="sticker-icon"
+                                    src={`/icons/${entry.icon}.png`}
+                                    alt=""
+                                    loading="lazy"
+                            />
+                            <span class="sticker-label">{entry.label}</span>
+                            <span class="sticker-blurb">{entry.blurb}</span>
+                        </a>
+                    </li>
+            ))}
+        </ul>
 
-    <ul class="contact-list">
-        <li>
-            <strong>Email:</strong>
-            <a href="mailto:you@example.com">you@example.com</a>
-        </li>
-        <li>
-            <strong>GitHub:</strong>
-            <a href="https://github.com/YOUR_USERNAME">@YOUR_USERNAME</a>
-        </li>
-        <li>
-            <strong>Guestbook:</strong>
-            <a href="/guestbook">Sign the book</a>
-        </li>
-    </ul>
+        <p>
+            Edit <code>src/pages/contact.astro</code> to update these links.
+        </p>
+    </div>
 
-    <p>
-        Edit <code>src/pages/contact.astro</code> to update these links.
-    </p>
+
 </RetroShell>
 
 <style>
@@ -41,18 +59,19 @@ export const prerender = true;
         max-width: 60ch;
     }
 
-    .contact-list {
+    .contact {
         list-style: none;
         padding: 0;
-        margin: 16px 0 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        font-size: 17px;
+        margin: 8px 0 36px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px 18px;
     }
 
-    .contact-list strong {
-        display: inline-block;
-        min-width: 90px;
+    .contact li:nth-child(odd) :global(.sticker) {
+        transform: rotate(-1.2deg);
+    }
+    .contact li:nth-child(even) :global(.sticker) {
+        transform: rotate(1deg);
     }
 </style>
