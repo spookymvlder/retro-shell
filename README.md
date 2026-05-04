@@ -6,7 +6,10 @@ the works. Built with [Astro](https://astro.build) and deployed to
 [Cloudflare Workers](https://developers.cloudflare.com/workers/) with a D1-backed
 guestbook, Pagefind site search, and a themable content area.
 
-The shell is locked to a 13" laptop width (1280px max). Mobile is not supported yet.
+The shell is locked to a 13" laptop width (1280px max). Shell changes for smaller screens to support mobile, but fake
+desktop is lost.
+
+See a version of this live at [carlcarlcarl.com](https://carlcarlcarl.com).
 
 ## Quick start (local)
 
