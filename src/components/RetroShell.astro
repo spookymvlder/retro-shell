@@ -5,6 +5,7 @@ import NavBar from "./NavBar.astro";
 import Toolbar from "./Toolbar.astro";
 import Taskbar from "./Taskbar.astro";
 import Sidebar from "./Sidebar.astro";
+import Lightbox from "./Lightbox.astro";
 
 interface Props {
     title?: string;
@@ -89,6 +90,7 @@ const footerSlot = Astro.slots.has("footer");
         </section>
 
         <Taskbar />
+        <Lightbox />
     </main>
 </Layout>
 
@@ -367,6 +369,37 @@ urlForm?.addEventListener("submit", (event) => {
         flex: 0 0 80px;
         font-weight: bold;
         color: var(--page-accent);
+    }
+
+    /* Lede paragraph — large intro text. */
+    .content :global(.lede) {
+        font-size: 19px;
+        max-width: 60ch;
+    }
+
+    /* Card — a generic content container with a magenta drop shadow. */
+    .content :global(.card) {
+        padding: 16px 20px;
+        margin: 16px 0;
+        background: var(--page-card-bg);
+        border: 2px solid var(--page-text);
+        box-shadow: 4px 4px 0 var(--page-accent);
+    }
+
+    /* Floated image inside a card — text wraps around. Use class="card-image"
+       on the <img>. */
+    .content :global(.card-image) {
+        float: right;
+        width: 240px;
+        margin: 0 0 12px 16px;
+        border: 2px solid var(--page-text);
+    }
+
+    /* Clearfix so the card grows around floated children. */
+    .content :global(.card)::after {
+        content: "";
+        display: block;
+        clear: both;
     }
 
     /* WebKit/Chromium: retro scrollbar with up/down buttons, hatched track,
