@@ -1,4 +1,5 @@
 ---
+// One <dialog> shared by every page. Any <img class="expandable"> opens here.
 ---
 
 <dialog id="lightbox" class="lightbox" aria-label="Image preview">
@@ -14,18 +15,21 @@
     if (dialog && lbImg) {
         // Any image with class="expandable" anywhere on the page becomes clickable.
         document.addEventListener("click", (e) => {
-            const target = e.target;
-            if (!(target instanceof HTMLImageElement)) return;
-            if (!target.classList.contains("expandable")) return;
+            const path = e.composedPath();
+            const img = path.find(
+                (n): n is HTMLImageElement =>
+                    n instanceof HTMLImageElement && n.classList.contains("expandable"),
+            );
+            if (!img) return;
             e.preventDefault();
-            lbImg.src = target.currentSrc || target.src;
-            lbImg.alt = target.alt;
+            lbImg.src = img.currentSrc || img.src;
+            lbImg.alt = img.alt;
             dialog.showModal();
         });
 
         closeBtn?.addEventListener("click", () => dialog.close());
 
-        // Click outside the image (on the backdrop) closes.
+        // Click on the backdrop (outside the image) closes.
         dialog.addEventListener("click", (e) => {
             if (e.target === dialog) dialog.close();
         });
@@ -74,6 +78,7 @@
         background: var(--page-highlight);
         color: var(--page-text-on-highlight);
         outline: 2px solid var(--page-accent);
+        outline-offset: 0;
     }
 
     /* Indicate expandable images on hover. */
